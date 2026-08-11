@@ -560,7 +560,7 @@ const firebaseConfig = {
    its URL below.
    ============================================================ */
 const CLOUDINARY_CLOUD_NAME = "xlpzooiq";
-const BACKEND_URL = "https://YOUR-BACKEND-URL.example.com"; // <-- set this after deploying /server
+const BACKEND_URL = "https://paintings-h845.onrender.com"; // <-- your deployed backend
 
 /* The login screen only asks for a password. Behind the scenes it signs in
    with this fixed admin email against Firebase Authentication. Change this
@@ -698,7 +698,10 @@ async function uploadToCloudinary(file, folder){
     headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${idToken}`},
     body: JSON.stringify({ folder })
   });
-  if(!sigRes.ok) throw new Error('Could not get an upload signature. Check that the backend is deployed and BACKEND_URL is correct.');
+  if(!sigRes.ok){
+    const errBody = await sigRes.json().catch(() => ({}));
+    throw new Error(`Signature request failed (HTTP ${sigRes.status}): ${errBody.error || sigRes.statusText || 'Unknown error'}`);
+  }
   const sig = await sigRes.json();
 
   const formData = new FormData();
