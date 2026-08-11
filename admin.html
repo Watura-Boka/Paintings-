@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Asaj Perera Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,450;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EF; --paper-deep:#F1E8D6; --ink:#26211B; --ink-soft:#6E6555;
+    --gold:#A9822F; --gold-bright:#C79A3D; --wall:#171310; --wall-soft:#241F19;
+    --brick:#8B3A3A; --green:#3E7A4B; --line:rgba(38,33,27,.12);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper-deep);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  ::selection{background:var(--gold);color:#fff;}
+
+  /* ---------- Login screen ---------- */
+  .login-screen{
+    position:fixed;inset:0;background:var(--wall);display:flex;align-items:center;justify-content:center;
+    z-index:500;padding:20px;
+  }
+  .login-box{background:var(--paper);padding:42px 38px;width:380px;max-width:100%;}
+  .login-box .logo{font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:4px;}
+  .login-box .logo em{color:var(--gold);font-style:italic;}
+  .login-box h2{font-family:'Fraunces',serif;font-size:1.3rem;margin:18px 0 6px;}
+  .login-box p.sub{color:var(--ink-soft);font-size:.85rem;margin:0 0 24px;line-height:1.5;}
+  .login-box .field{margin-bottom:16px;}
+  .login-box .field label{display:block;font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:6px;}
+  .login-box .field input{width:100%;padding:11px 12px;border:1px solid var(--line);font-family:'Inter',sans-serif;font-size:.9rem;background:#fff;}
+  .login-error{color:var(--brick);font-size:.8rem;margin-top:14px;display:none;line-height:1.5;}
+  .login-error.show{display:block;}
+  .login-box button[type=submit]{width:100%;justify-content:center;margin-top:6px;}
+
+  /* ---------- App shell ---------- */
+  .app{display:none;min-height:100vh;}
+  .app.ready{display:flex;}
+  .sidebar{
+    width:250px;flex-shrink:0;background:var(--wall);color:#F4EFE3;
+    display:flex;flex-direction:column;padding:26px 0;
+  }
+  .sidebar .brand{padding:0 24px 26px;border-bottom:1px solid rgba(244,239,227,.1);margin-bottom:18px;}
+  .sidebar .brand .logo{font-family:'Fraunces',serif;font-size:1.3rem;}
+  .sidebar .brand .logo em{color:var(--gold-bright);font-style:italic;}
+  .sidebar .brand .sub{font-family:'Space Mono',monospace;font-size:.62rem;color:#8F8571;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  nav.sidenav{display:flex;flex-direction:column;gap:2px;padding:0 12px;}
+  nav.sidenav button{
+    display:flex;align-items:center;gap:12px;background:none;border:none;color:#C9BFA9;
+    padding:12px 14px;font-size:.88rem;font-family:'Inter',sans-serif;text-align:left;cursor:pointer;
+    border-radius:3px;transition:background .15s,color .15s;
+  }
+  nav.sidenav button:hover{background:rgba(244,239,227,.06);color:#F4EFE3;}
+  nav.sidenav button.active{background:var(--gold-bright);color:var(--wall);font-weight:600;}
+  nav.sidenav .ic{width:18px;text-align:center;}
+  .sidebar-footer{margin-top:auto;padding:18px 24px 0;border-top:1px solid rgba(244,239,227,.1);}
+  .sidebar-footer p{font-family:'Space Mono',monospace;font-size:.64rem;color:#8F8571;line-height:1.6;margin:14px 0 0;}
+  .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#8F8571;margin-right:6px;}
+  .conn-dot.ok{background:var(--green);}
+  .conn-dot.err{background:var(--brick);}
+  .logout-btn{
+    margin-top:14px;background:none;border:1px solid rgba(244,239,227,.25);color:#C9BFA9;
+    padding:9px 12px;font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;
+    cursor:pointer;width:100%;text-align:left;
+  }
+  .logout-btn:hover{border-color:var(--gold-bright);color:var(--gold-bright);}
+
+  main{flex:1;padding:36px 42px;max-width:100%;overflow-x:hidden;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .view-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:28px;}
+  .view-head h1{font-family:'Fraunces',serif;font-weight:500;font-size:1.9rem;margin:0 0 6px;}
+  .view-head p{color:var(--ink-soft);font-size:.9rem;margin:0;}
+
+  .btn{
+    font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;padding:11px 20px;
+    border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;transition:all .2s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn:hover{background:var(--gold);border-color:var(--gold);}
+  .btn.outline{background:transparent;color:var(--ink);}
+  .btn.outline:hover{background:var(--ink);color:var(--paper);}
+  .btn.danger{background:var(--brick);border-color:var(--brick);color:#fff;}
+  .btn.danger:hover{background:#6E2C2C;border-color:#6E2C2C;}
+  .btn.sm{padding:7px 13px;font-size:.75rem;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* ---------- Stat cards ---------- */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px;}
+  @media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.stat-grid{grid-template-columns:1fr;}}
+  .stat-card{background:var(--paper);border:1px solid var(--line);padding:20px 22px;}
+  .stat-card .num{font-family:'Fraunces',serif;font-size:2rem;color:var(--gold);}
+  .stat-card .lbl{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;}
+
+  .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media(max-width:900px){.panel-grid{grid-template-columns:1fr;}}
+  .panel{background:var(--paper);border:1px solid var(--line);padding:24px;}
+  .panel h3{font-family:'Fraunces',serif;font-size:1.1rem;margin:0 0 16px;}
+  .mini-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:.86rem;}
+  .mini-row:last-child{border-bottom:none;}
+  .mini-row .n{font-family:'Space Mono',monospace;color:var(--gold);}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px;}
+  .toolbar input[type=text], .toolbar select{
+    font-family:'Inter',sans-serif;font-size:.85rem;padding:10px 12px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink);
+  }
+  .toolbar input[type=text]{flex:1;min-width:200px;}
+
+  /* ---------- Table ---------- */
+  .table-wrap{background:var(--paper);border:1px solid var(--line);overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  th{
+    text-align:left;font-family:'Space Mono',monospace;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--ink-soft);background:var(--paper-deep);padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(169,130,47,.04);}
+  .thumb{width:44px;height:44px;object-fit:cover;flex-shrink:0;}
+  .row-title{display:flex;align-items:center;gap:12px;}
+  .row-title .t{font-family:'Fraunces',serif;font-size:.95rem;}
+  .row-title .m{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--ink-soft);}
+  .badge{
+    font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;
+    padding:4px 9px;display:inline-block;
+  }
+  .badge.available{background:rgba(62,122,75,.14);color:var(--green);}
+  .badge.reserved{background:rgba(169,130,47,.14);color:var(--gold);}
+  .badge.sold{background:rgba(139,58,58,.14);color:var(--brick);}
+  .badge.new{background:rgba(139,58,58,.14);color:var(--brick);}
+  .badge.read{background:rgba(169,130,47,.14);color:var(--gold);}
+  .badge.replied{background:rgba(62,122,75,.14);color:var(--green);}
+  .badge.closed{background:rgba(110,101,85,.14);color:var(--ink-soft);}
+  .badge.featured{background:rgba(169,130,47,.2);color:var(--gold);}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .icon-btn{
+    background:none;border:1px solid var(--line);padding:6px 10px;font-size:.72rem;cursor:pointer;
+    font-family:'Space Mono',monospace;color:var(--ink-soft);transition:all .15s;
+  }
+  .icon-btn:hover{border-color:var(--ink);color:var(--ink);}
+  .icon-btn.danger:hover{border-color:var(--brick);color:var(--brick);}
+  .empty-state{padding:50px 20px;text-align:center;color:var(--ink-soft);font-family:'Space Mono',monospace;font-size:.85rem;}
+
+  /* ---------- Modal / drawer form ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(23,19,16,.62);z-index:300;display:none;
+    align-items:flex-start;justify-content:flex-end;
+  }
+  .modal-overlay.open{display:flex;}
+  .drawer{
+    background:var(--paper);width:520px;max-width:100%;height:100%;overflow-y:auto;padding:32px 30px 40px;
+  }
+  .drawer h2{font-family:'Fraunces',serif;font-size:1.5rem;margin:0 0 22px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 12px;border:1px solid var(--line);background:#fff;font-family:'Inter',sans-serif;font-size:.9rem;color:var(--ink);
+  }
+  .field textarea{min-height:90px;resize:vertical;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  .field-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .dim-preview{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--gold);margin-top:6px;}
+  .checkbox-field{display:flex;align-items:center;gap:8px;}
+  .checkbox-field input{width:auto;}
+  .checkbox-field label{margin:0;}
+  .image-preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .image-preview-row .thumb-wrap{position:relative;width:64px;}
+  .image-preview-row img{width:64px;height:64px;object-fit:cover;}
+  .thumb-dim{font-family:'Space Mono',monospace;font-size:.58rem;text-align:center;margin-top:3px;line-height:1.3;}
+  .thumb-dim.ok{color:var(--green);}
+  .thumb-dim.warn{color:var(--brick);}
+
+  .dim-guide-box{background:var(--paper-deep);border-left:3px solid var(--gold);padding:12px 14px;margin:4px 0 14px;}
+  .dim-guide-box.small{margin-top:8px;}
+  .dim-guide-size{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--ink);font-weight:600;}
+  .dim-guide-ratio{color:var(--gold);font-weight:400;}
+  .dim-guide-note{font-size:.78rem;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+  .dim-check{font-family:'Space Mono',monospace;font-size:.74rem;margin-top:8px;padding:9px 11px;line-height:1.5;}
+  .dim-check.ok{background:rgba(62,122,75,.1);color:var(--green);}
+  .dim-check.warn{background:rgba(139,58,58,.1);color:var(--brick);}
+  .image-preview-row .rm{
+    position:absolute;top:-6px;right:-6px;background:var(--brick);color:#fff;border:none;
+    width:18px;height:18px;border-radius:50%;font-size:.7rem;cursor:pointer;line-height:1;
+  }
+  .upload-progress{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--gold);margin-top:8px;}
+  .drawer-actions{display:flex;gap:10px;margin-top:26px;position:sticky;bottom:0;background:var(--paper);padding-top:10px;}
+  .drawer-close{position:absolute;top:22px;right:22px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-soft);}
+
+  /* Inquiry detail drawer */
+  .inq-detail-row{padding:12px 0;border-bottom:1px solid var(--line);}
+  .inq-detail-row .lbl{font-family:'Space Mono',monospace;font-size:.66rem;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.05em;}
+  .inq-detail-row .val{font-size:.92rem;margin-top:4px;}
+  .inq-artwork-card{display:flex;gap:12px;align-items:center;padding:14px;background:var(--paper-deep);margin-bottom:16px;}
+  .inq-artwork-card img{width:56px;height:56px;object-fit:cover;}
+  .status-select-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+
+  .toast{
+    position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:14px 20px;
+    font-size:.85rem;z-index:400;box-shadow:0 10px 30px -8px rgba(0,0,0,.4);opacity:0;transform:translateY(10px);
+    transition:opacity .25s,transform .25s;pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast.err{background:var(--brick);}
+
+  .config-warning{
+    background:#FCEFD9;border:1px solid var(--gold);padding:16px 20px;margin-bottom:24px;font-size:.85rem;line-height:1.6;
+  }
+  .config-warning strong{color:var(--gold);}
+
+  /* ---------- Site image management ---------- */
+  .tab-btn{
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+    padding:9px 16px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .2s;
+  }
+  .tab-btn:hover{border-color:var(--ink);color:var(--ink);}
+  .tab-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .simg-tabs{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+  .simg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
+  .simg-card{background:var(--paper);border:1px solid var(--line);overflow:hidden;}
+  .simg-card img{width:100%;aspect-ratio:4/3;object-fit:cover;}
+  .simg-card .simg-body{padding:12px 14px;}
+  .simg-card .simg-meta{font-family:'Space Mono',monospace;font-size:.64rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;}
+  .simg-card .simg-meta.on{color:var(--gold);}
+  .simg-actions{display:flex;gap:6px;flex-wrap:wrap;}
+
+  @media(max-width:860px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;padding:14px;}
+    .sidebar .brand{border:none;padding:0 12px 0 0;margin:0;display:flex;align-items:center;}
+    nav.sidenav{flex-direction:row;flex-wrap:wrap;padding:0;}
+    .sidebar-footer{display:none;}
+    main{padding:24px 18px;}
+    .drawer{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="logo">Asaj Perera<em>.</em></div>
+    <h2>Admin Sign In</h2>
+    <p class="sub">This dashboard is restricted to the gallery administrator. Enter the admin password to continue.</p>
+    <form id="loginForm">
+      <div class="field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password" autofocus></div>
+      <button type="submit" class="btn" id="login-submit">Sign In</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="appRoot">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">Asaj Perera<em>.</em></div>
+      <div class="sub">Admin Dashboard</div>
+    </div>
+    <nav class="sidenav" id="sidenav">
+      <button data-view="overview" class="active"><span class="ic">◆</span> Dashboard Overview</button>
+      <button data-view="artworks"><span class="ic">▦</span> Artwork Management</button>
+      <button data-view="inquiries"><span class="ic">✉</span> Inquiry Management</button>
+      <button data-view="categories"><span class="ic">▤</span> Category Management</button>
+      <button data-view="siteimages"><span class="ic">▣</span> Site Images</button>
+      <button data-view="analytics"><span class="ic">▲</span> Artwork Analytics</button>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="mono" style="font-size:.7rem;color:#C9BFA9;"><span class="conn-dot" id="connDot"></span><span id="connLabel">Connecting…</span></span>
+      <p>Changes here sync live to the customer website via Firebase — no code editing needed.</p>
+      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="config-warning" id="configWarning" style="display:none;">
+      <strong>Image uploads aren't connected yet.</strong> Open this file, find <code>BACKEND_URL</code> near the top of the script, and point it at your deployed Cloudinary signing server (see the <code>/server</code> folder). Until then, image uploads will fail.
+    </div>
+
+    <!-- OVERVIEW -->
+    <section class="view active" id="view-overview">
+      <div class="view-head">
+        <div><h1>Dashboard Overview</h1><p>A live snapshot of your gallery, pulled straight from Firestore.</p></div>
+      </div>
+      <div class="stat-grid" id="overviewStats"></div>
+      <div class="panel-grid">
+        <div class="panel">
+          <h3>Most Viewed Artworks</h3>
+          <div id="mostViewedList"></div>
+        </div>
+        <div class="panel">
+          <h3>Most Favourited Artworks</h3>
+          <div id="mostFavList"></div>
+        </div>
+        <div class="panel">
+          <h3>Most Inquired Artworks</h3>
+          <div id="mostInquiredList"></div>
+        </div>
+        <div class="panel">
+          <h3>Recent Inquiries</h3>
+          <div id="recentInquiriesList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARTWORKS -->
+    <section class="view" id="view-artworks">
+      <div class="view-head">
+        <div><h1>Artwork Management</h1><p>Add, edit, and publish artworks. Changes appear on the site instantly.</p></div>
+        <button class="btn" id="addArtworkBtn">+ Add Artwork</button>
+      </div>
+      <div class="toolbar">
+        <input type="text" id="artworkSearch" placeholder="Search artworks by title...">
+        <select id="artworkStatusFilter">
+          <option value="all">All Statuses</option>
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="sold">Sold</option>
+        </select>
+        <select id="artworkCategoryFilter"><option value="all">All Categories</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Artwork</th><th>Category</th><th>Medium</th><th>Size</th><th>Price</th><th>Status</th><th>Featured</th><th>Views</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="artworkTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- INQUIRIES -->
+    <section class="view" id="view-inquiries">
+      <div class="view-head">
+        <div><h1>Inquiry Management</h1><p>Every website and form submission lands here in real time.</p></div>
+      </div>
+      <div class="toolbar">
+        <input type="text" id="inquirySearch" placeholder="Search by name, email, or artwork...">
+        <select id="inquiryStatusFilter">
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="read">Read</option>
+          <option value="replied">Replied</option>
+          <option value="closed">Closed</option>
+        </select>
+        <input type="date" id="inquiryDateFilter">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Customer</th><th>Artwork</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="inquiryTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="view" id="view-categories">
+      <div class="view-head">
+        <div><h1>Category Management</h1><p>These categories power the filter buttons on the customer website.</p></div>
+        <button class="btn" id="addCategoryBtn">+ Add Category</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category Name</th><th>Artworks Using It</th><th>Actions</th></tr></thead>
+          <tbody id="categoryTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SITE IMAGES -->
+    <section class="view" id="view-siteimages">
+      <div class="view-head">
+        <div><h1>Site Image Management</h1><p>Control the homepage banner, the artist photo, and gallery highlights — all update live on the website. Only visible to you.</p></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:28px;max-width:560px;">
+        <h3>Upload New Image</h3>
+        <form id="siteImageForm">
+          <div class="field">
+            <label>Where Will This Image Be Used?</label>
+            <select id="si-section">
+              <option value="homepage">Homepage Banner</option>
+              <option value="artist">Artist Photo</option>
+              <option value="gallery">Gallery Highlight</option>
+            </select>
+          </div>
+          <div class="dim-guide-box" id="si-dim-guide"></div>
+          <div class="field"><label>Image File</label><input type="file" id="si-file" accept="image/*" required></div>
+          <div id="si-dim-check"></div>
+          <div class="field checkbox-field" id="si-override-wrap" style="display:none;margin-top:10px;">
+            <input type="checkbox" id="si-override">
+            <label for="si-override">Upload anyway — I understand it doesn't match the recommended size</label>
+          </div>
+          <div class="field checkbox-field" style="margin-top:16px;">
+            <input type="checkbox" id="si-featured">
+            <label for="si-featured">Feature on Homepage</label>
+          </div>
+          <div class="upload-progress" id="si-upload-progress"></div>
+          <button type="submit" class="btn" id="si-submit-btn">Upload Image</button>
+        </form>
+      </div>
+
+      <div class="simg-tabs" id="simgTabs">
+        <button class="tab-btn active" data-tab="homepage">Homepage</button>
+        <button class="tab-btn" data-tab="artist">Artist</button>
+        <button class="tab-btn" data-tab="gallery">Gallery</button>
+      </div>
+      <div class="simg-grid" id="siteImagesGrid"></div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="view" id="view-analytics">
+      <div class="view-head">
+        <div><h1>Artwork Analytics</h1><p>See which pieces are attracting the most interest.</p></div>
+      </div>
+      <div class="toolbar">
+        <select id="analyticsSort">
+          <option value="views">Sort by Views</option>
+          <option value="inquiries">Sort by Inquiries</option>
+          <option value="whatsapp">Sort by WhatsApp Clicks</option>
+          <option value="favorites">Sort by Favorites</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Artwork</th><th>Views</th><th>Website Inquiries</th><th>WhatsApp Clicks</th><th>Favorites</th>
+          </tr></thead>
+          <tbody id="analyticsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Add / Edit Artwork Drawer -->
+<div class="modal-overlay" id="artworkDrawerOverlay">
+  <div class="drawer">
+    <button class="drawer-close" id="artworkDrawerClose">×</button>
+    <h2 id="artworkDrawerTitle">Add Artwork</h2>
+    <form id="artworkForm">
+      <input type="hidden" id="af-id">
+      <div class="field">
+        <label>Artwork Images</label>
+        <div class="dim-guide-box small">
+          <div class="dim-guide-size">Recommended: 1000 × 1250px <span class="dim-guide-ratio">(4:5 portrait)</span></div>
+          <div class="dim-guide-note">Artwork photos display in a tall 4:5 frame on the gallery page. Photos with different proportions will be cropped to fit — a straight-on portrait-orientation photo of the painting works best.</div>
+        </div>
+        <input type="file" id="af-images" accept="image/*" multiple>
+        <div class="image-preview-row" id="af-image-preview"></div>
+        <div class="field checkbox-field" id="af-override-wrap" style="display:none;margin-top:10px;">
+          <input type="checkbox" id="af-override">
+          <label for="af-override">Publish anyway — some images don't match the recommended size</label>
+        </div>
+        <div class="upload-progress" id="af-upload-progress"></div>
+      </div>
+      <div class="field"><label>Title</label><input type="text" id="af-title" required></div>
+      <div class="field"><label>Description</label><textarea id="af-description" required></textarea></div>
+      <div class="field-row-2">
+        <div class="field"><label>Category</label><select id="af-category" required></select></div>
+        <div class="field"><label>Medium</label>
+          <select id="af-medium" required>
+            <option value="Oil on Canvas">Oil on Canvas</option>
+            <option value="Acrylic on Canvas">Acrylic on Canvas</option>
+            <option value="Watercolor on Paper">Watercolor on Paper</option>
+            <option value="Charcoal">Charcoal</option>
+            <option value="Pencil">Pencil</option>
+            <option value="Mixed Media">Mixed Media</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Width</label><input type="number" step="0.1" id="af-width" required></div>
+        <div class="field"><label>Height</label><input type="number" step="0.1" id="af-height" required></div>
+        <div class="field"><label>Unit</label>
+          <select id="af-unit">
+            <option value="feet">Feet</option>
+            <option value="inches">Inches</option>
+            <option value="centimetres">Centimetres</option>
+            <option value="metres">Metres</option>
+          </select>
+        </div>
+      </div>
+      <div class="dim-preview" id="af-dim-preview">Preview: —</div>
+      <div class="field" style="margin-top:16px;"><label>Price (optional)</label><input type="text" id="af-price" placeholder="e.g. LKR 145,000"></div>
+      <div class="field"><label>Availability Status</label>
+        <select id="af-status">
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="sold">Sold</option>
+        </select>
+      </div>
+      <div class="field checkbox-field"><input type="checkbox" id="af-featured"><label for="af-featured">Feature on homepage</label></div>
+      <div class="drawer-actions">
+        <button type="submit" class="btn" id="af-submit-btn">Publish Artwork</button>
+        <button type="button" class="btn outline" id="artworkDrawerCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Inquiry Detail Drawer -->
+<div class="modal-overlay" id="inquiryDrawerOverlay">
+  <div class="drawer">
+    <button class="drawer-close" id="inquiryDrawerClose">×</button>
+    <h2>Inquiry Details</h2>
+    <div id="inquiryDetailBody"></div>
+  </div>
+</div>
+
+<!-- Add Category Drawer -->
+<div class="modal-overlay" id="categoryDrawerOverlay">
+  <div class="drawer" style="width:400px;">
+    <button class="drawer-close" id="categoryDrawerClose">×</button>
+    <h2 id="categoryDrawerTitle">Add Category</h2>
+    <form id="categoryForm">
+      <input type="hidden" id="cf-id">
+      <div class="field"><label>Category Name</label><input type="text" id="cf-name" required placeholder="e.g. Landscape"></div>
+      <div class="drawer-actions">
+        <button type="submit" class="btn">Save Category</button>
+        <button type="button" class="btn outline" id="categoryDrawerCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ============================================================
+   FIREBASE CONFIG — must match the config in the customer
+   website's index.html exactly, so both sites read/write the
+   same database.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDU36D8k1upgv-DMNW_t97NwpNec8Cyq1s",
+  authDomain: "painting-866d6.firebaseapp.com",
+  projectId: "painting-866d6",
+  storageBucket: "painting-866d6.firebasestorage.app",
+  messagingSenderId: "70707197005",
+  appId: "1:70707197005:web:d30406650a2ddb68511804",
+  measurementId: "G-ELZQ5J7GX9"
+};
+
+/* ============================================================
+   CLOUDINARY CONFIG
+   The API secret must never live in this file (or any
+   browser-side code). Uploads are signed by the small backend
+   in the /server folder. Deploy it, then point BACKEND_URL at
+   its URL below.
+   ============================================================ */
+const CLOUDINARY_CLOUD_NAME = "xlpzooiq";
+const BACKEND_URL = "https://YOUR-BACKEND-URL.example.com"; // <-- set this after deploying /server
+
+/* The login screen only asks for a password. Behind the scenes it signs in
+   with this fixed admin email against Firebase Authentication. Change this
+   (and the corresponding Firebase Auth user) if you ever need a different
+   admin account. */
+const ADMIN_EMAIL = "burhnah0@gmail.com";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, getDoc, onSnapshot, addDoc, updateDoc, deleteDoc,
+  serverTimestamp, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+let app, db, auth;
+try{
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+  setConn(true, 'Connected');
+}catch(e){
+  setConn(false, 'Connection failed');
+}
+function setConn(ok, label){
+  document.getElementById('connDot').className = 'conn-dot ' + (ok ? 'ok' : 'err');
+  document.getElementById('connLabel').textContent = label;
+}
+if(BACKEND_URL.includes('YOUR-BACKEND-URL')){
+  document.getElementById('configWarning').style.display = 'block';
+}
+
+let artworks = [];
+let inquiries = [];
+let categories = [];
+let siteImages = [];
+let listenersStarted = false;
+
+const UNIT_ABBR = { feet:'ft', inches:'in', centimetres:'cm', metres:'m' };
+function formatDimension(w,h,unit){
+  const a = UNIT_ABBR[unit] || unit || '';
+  if(!w || !h) return '—';
+  return `${w} ${a} × ${h} ${a}`;
+}
+function firstImage(p){
+  const first = (p && p.images && p.images.length) ? p.images[0] : null;
+  const url = first ? (typeof first === 'string' ? first : first.url) : null;
+  return url || 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=200&q=60';
+}
+function fmtDate(ts){
+  if(!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) + ' · ' + d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+function millis(ts){ return ts && ts.toMillis ? ts.toMillis() : 0; }
+function toast(msg, isErr){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' err' : '');
+  setTimeout(() => t.className = 'toast', 2600);
+}
+
+/* ============================================================
+   AUTH — dashboard is unusable until an authorized admin
+   (their uid must have a doc in the `admins` Firestore
+   collection) signs in.
+   ============================================================ */
+function showApp(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').classList.add('ready');
+}
+function showLogin(){
+  document.getElementById('appRoot').classList.remove('ready');
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+function loginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function clearLoginError(){
+  const el = document.getElementById('loginError');
+  el.textContent = '';
+  el.classList.remove('show');
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user){ showLogin(); return; }
+  try{
+    const adminSnap = await getDoc(doc(db,'admins', user.uid));
+    if(adminSnap.exists()){
+      clearLoginError();
+      showApp();
+      startAppListeners();
+    } else {
+      loginError('This account is not authorized as an admin.');
+      await signOut(auth);
+    }
+  }catch(e){
+    loginError('Could not verify admin access. Please try again.');
+    await signOut(auth);
+  }
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearLoginError();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-submit');
+  btn.disabled = true;
+  try{
+    await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
+  }catch(err){
+    loginError('Incorrect email or password.');
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+/* ============================================================
+   CLOUDINARY UPLOAD / DELETE (via secure backend)
+   ============================================================ */
+async function getIdToken(){
+  const user = auth.currentUser;
+  if(!user) throw new Error('You are signed out. Please sign in again.');
+  return await user.getIdToken();
+}
+
+async function uploadToCloudinary(file, folder){
+  const idToken = await getIdToken();
+  const sigRes = await fetch(`${BACKEND_URL}/api/cloudinary-signature`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${idToken}`},
+    body: JSON.stringify({ folder })
+  });
+  if(!sigRes.ok) throw new Error('Could not get an upload signature. Check that the backend is deployed and BACKEND_URL is correct.');
+  const sig = await sigRes.json();
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('api_key', sig.apiKey);
+  formData.append('timestamp', sig.timestamp);
+  formData.append('signature', sig.signature);
+  formData.append('folder', sig.folder);
+
+  const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
+    method:'POST',
+    body: formData
+  });
+  if(!uploadRes.ok){
+    const errBody = await uploadRes.json().catch(()=>({}));
+    throw new Error(errBody?.error?.message || 'Cloudinary upload failed.');
+  }
+  const data = await uploadRes.json();
+  return { url: data.secure_url, publicId: data.public_id };
+}
+
+async function deleteFromCloudinary(publicId){
+  if(!publicId) return;
+  try{
+    const idToken = await getIdToken();
+    await fetch(`${BACKEND_URL}/api/cloudinary-delete`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${idToken}`},
+      body: JSON.stringify({ publicId })
+    });
+  }catch(e){ /* non-fatal — Firestore record is still removed */ }
+}
+
+/* ---------- Nav ---------- */
+document.getElementById('sidenav').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-view]');
+  if(!btn) return;
+  document.querySelectorAll('#sidenav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  if(btn.dataset.view === 'overview') renderOverview();
+  if(btn.dataset.view === 'analytics') renderAnalytics();
+  if(btn.dataset.view === 'siteimages') renderSiteImages();
+});
+
+/* ---------- Live listeners (start only once an admin is confirmed) ---------- */
+function startAppListeners(){
+  if(listenersStarted) return;
+  listenersStarted = true;
+
+  onSnapshot(query(collection(db,'artworks'), orderBy('createdAt','desc')), (snap) => {
+    artworks = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderArtworkTable();
+    renderCategoryFilterOptions();
+    renderOverview();
+    renderAnalytics();
+  }, (err) => toast('Artworks stream error: '+(err.code||err.message), true));
+
+  onSnapshot(query(collection(db,'inquiries'), orderBy('createdAt','desc')), (snap) => {
+    inquiries = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderInquiryTable();
+    renderOverview();
+  }, (err) => toast('Inquiries stream error: '+(err.code||err.message), true));
+
+  onSnapshot(collection(db,'categories'), (snap) => {
+    categories = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderCategoryTable();
+    renderCategoryOptions();
+    renderCategoryFilterOptions();
+  }, (err) => toast('Categories stream error: '+(err.code||err.message), true));
+
+  onSnapshot(collection(db,'siteImages'), (snap) => {
+    siteImages = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderSiteImages();
+  }, (err) => toast('Site images stream error: '+(err.code||err.message), true));
+}
+
+/* ============================================================
+   OVERVIEW
+   ============================================================ */
+function renderOverview(){
+  const total = artworks.length;
+  const sold = artworks.filter(a=>a.status==='sold').length;
+  const available = artworks.filter(a=>a.status==='available').length;
+  const reserved = artworks.filter(a=>a.status==='reserved').length;
+  const featured = artworks.filter(a=>a.featured).length;
+  const totalInquiries = inquiries.length;
+  const newInq = inquiries.filter(i=>i.status==='new').length;
+  const unreadInq = inquiries.filter(i=>i.status==='new').length;
+  const totalWhatsapp = artworks.reduce((s,a)=>s+(a.whatsappClicks||0),0);
+
+  const stats = [
+    ['Total Artworks', total], ['Total Inquiries', totalInquiries], ['New Inquiries', newInq],
+    ['Unread Inquiries', unreadInq], ['Total Categories', categories.length], ['Featured Artworks', featured],
+    ['Sold Artworks', sold], ['Available Artworks', available], ['Reserved Artworks', reserved],
+    ['Total WhatsApp Inquiries', totalWhatsapp]
+  ];
+  document.getElementById('overviewStats').innerHTML = stats.map(([l,n]) =>
+    `<div class="stat-card"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('');
+
+  const byViews = [...artworks].sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
+  document.getElementById('mostViewedList').innerHTML = byViews.length ? byViews.map(a =>
+    `<div class="mini-row"><span>${a.title||'Untitled'}</span><span class="n">${a.views||0}</span></div>`).join('') : emptyRow();
+
+  const byFav = [...artworks].sort((a,b)=>(b.favoritesCount||0)-(a.favoritesCount||0)).slice(0,5);
+  document.getElementById('mostFavList').innerHTML = byFav.length ? byFav.map(a =>
+    `<div class="mini-row"><span>${a.title||'Untitled'}</span><span class="n">${a.favoritesCount||0}</span></div>`).join('') : emptyRow();
+
+  const inqCounts = {};
+  inquiries.forEach(i => { if(i.artworkTitle) inqCounts[i.artworkTitle] = (inqCounts[i.artworkTitle]||0)+1; });
+  const byInquired = Object.entries(inqCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('mostInquiredList').innerHTML = byInquired.length ? byInquired.map(([t,n]) =>
+    `<div class="mini-row"><span>${t}</span><span class="n">${n}</span></div>`).join('') : emptyRow();
+
+  const recent = inquiries.slice(0,5);
+  document.getElementById('recentInquiriesList').innerHTML = recent.length ? recent.map(i =>
+    `<div class="mini-row"><span>${i.name||'Unknown'} — ${i.artworkTitle||'General'}</span><span class="badge ${i.status}">${i.status}</span></div>`).join('') : emptyRow();
+}
+function emptyRow(){ return `<div class="mini-row"><span style="color:var(--ink-soft);">No data yet</span></div>`; }
+
+/* ============================================================
+   ARTWORKS
+   ============================================================ */
+function renderCategoryFilterOptions(){
+  const sel = document.getElementById('artworkCategoryFilter');
+  const current = sel.value;
+  sel.innerHTML = `<option value="all">All Categories</option>` + categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+  if([...sel.options].some(o=>o.value===current)) sel.value = current;
+}
+
+function renderArtworkTable(){
+  const tbody = document.getElementById('artworkTableBody');
+  const search = (document.getElementById('artworkSearch').value||'').toLowerCase();
+  const statusF = document.getElementById('artworkStatusFilter').value;
+  const catF = document.getElementById('artworkCategoryFilter').value;
+
+  let list = artworks.filter(a => {
+    if(search && !(a.title||'').toLowerCase().includes(search)) return false;
+    if(statusF!=='all' && a.status!==statusF) return false;
+    if(catF!=='all' && a.category!==catF) return false;
+    return true;
+  });
+
+  if(!list.length){ tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">No artworks yet. Click "+ Add Artwork" to publish your first piece.</div></td></tr>`; return; }
+
+  tbody.innerHTML = list.map(a => `
+    <tr>
+      <td><div class="row-title"><img class="thumb" src="${firstImage(a)}" alt=""><div><div class="t">${a.title||'Untitled'}</div><div class="m">${a.images?a.images.length:0} image(s)</div></div></div></td>
+      <td>${a.category||'—'}</td>
+      <td>${a.medium||'—'}</td>
+      <td class="mono" style="font-size:.78rem;">${formatDimension(a.width,a.height,a.unit)}</td>
+      <td>${a.price||'—'}</td>
+      <td><span class="badge ${a.status}">${a.status}</span></td>
+      <td>${a.featured ? '<span class="badge featured">Featured</span>' : '—'}</td>
+      <td class="mono">${a.views||0}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-edit="${a.id}">Edit</button>
+        <button class="icon-btn" data-status="${a.id}">Status</button>
+        <button class="icon-btn danger" data-delete="${a.id}">Delete</button>
+      </div></td>
+    </tr>`).join('');
+
+  tbody.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openArtworkDrawer(b.dataset.edit)));
+  tbody.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deleteArtwork(b.dataset.delete)));
+  tbody.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => cycleStatus(b.dataset.status)));
+}
+document.getElementById('artworkSearch').addEventListener('input', renderArtworkTable);
+document.getElementById('artworkStatusFilter').addEventListener('change', renderArtworkTable);
+document.getElementById('artworkCategoryFilter').addEventListener('change', renderArtworkTable);
+
+async function cycleStatus(id){
+  const a = artworks.find(x=>x.id===id);
+  if(!a) return;
+  const order = ['available','reserved','sold'];
+  const next = order[(order.indexOf(a.status)+1) % order.length];
+  try{
+    await updateDoc(doc(db,'artworks',id), {status: next, updatedAt: serverTimestamp()});
+    toast(`Status changed to "${next}"`);
+  }catch(e){ toast('Failed to update status', true); }
+}
+async function deleteArtwork(id){
+  if(!confirm('Permanently delete this artwork? This cannot be undone.')) return;
+  try{
+    await deleteDoc(doc(db,'artworks',id));
+    toast('Artwork deleted');
+  }catch(e){ toast('Failed to delete', true); }
+}
+
+/* ---------- Add / Edit Artwork Drawer ---------- */
+const artworkOverlay = document.getElementById('artworkDrawerOverlay');
+let pendingImages = []; // {file, url, width, height} local previews before upload, or {url, publicId, existing:true, width, height}
+let editingArtworkId = null;
+
+/* ---------- Image dimension checking (shared by artwork + site images) ---------- */
+const ARTWORK_IMAGE_SPEC = { width:1000, height:1250, label:'4:5 portrait', minWidth:500, minHeight:625 };
+const RATIO_TOLERANCE = 0.08; // 8% leeway before we flag a mismatch
+
+function getImageDimensionsFromUrl(url){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => reject(new Error('Could not read this image'));
+    img.src = url;
+  });
+}
+function dimsMismatch(dims, spec){
+  if(!dims || !dims.width || !dims.height) return false;
+  const ratio = dims.width / dims.height;
+  const target = spec.width / spec.height;
+  const ratioOff = Math.abs(ratio - target) / target;
+  const tooSmall = dims.width < spec.minWidth || dims.height < spec.minHeight;
+  return ratioOff > RATIO_TOLERANCE || tooSmall;
+}
+
+function renderCategoryOptions(){
+  document.getElementById('af-category').innerHTML = categories.length
+    ? categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')
+    : `<option value="">Add a category first</option>`;
+}
+
+document.getElementById('addArtworkBtn').addEventListener('click', () => openArtworkDrawer(null));
+document.getElementById('artworkDrawerClose').addEventListener('click', closeArtworkDrawer);
+document.getElementById('artworkDrawerCancel').addEventListener('click', closeArtworkDrawer);
+artworkOverlay.addEventListener('click', (e) => { if(e.target===artworkOverlay) closeArtworkDrawer(); });
+
+function openArtworkDrawer(id){
+  editingArtworkId = id;
+  const form = document.getElementById('artworkForm');
+  form.reset();
+  pendingImages = [];
+  document.getElementById('af-upload-progress').textContent = '';
+  renderCategoryOptions();
+
+  if(id){
+    const a = artworks.find(x=>x.id===id);
+    document.getElementById('artworkDrawerTitle').textContent = 'Edit Artwork';
+    document.getElementById('af-submit-btn').textContent = 'Save Changes';
+    document.getElementById('af-title').value = a.title||'';
+    document.getElementById('af-description').value = a.description||'';
+    document.getElementById('af-category').value = a.category||'';
+    document.getElementById('af-medium').value = a.medium||'Oil on Canvas';
+    document.getElementById('af-width').value = a.width||'';
+    document.getElementById('af-height').value = a.height||'';
+    document.getElementById('af-unit').value = a.unit||'feet';
+    document.getElementById('af-price').value = a.price||'';
+    document.getElementById('af-status').value = a.status||'available';
+    document.getElementById('af-featured').checked = !!a.featured;
+    pendingImages = (a.images||[]).map(img => typeof img === 'string'
+      ? {url: img, publicId: null, existing:true}
+      : {url: img.url, publicId: img.publicId||null, existing:true});
+  } else {
+    document.getElementById('artworkDrawerTitle').textContent = 'Add Artwork';
+    document.getElementById('af-submit-btn').textContent = 'Publish Artwork';
+  }
+  renderImagePreview();
+  updateDimPreview();
+  artworkOverlay.classList.add('open');
+
+  // Fill in dimensions for already-uploaded images too (non-blocking)
+  pendingImages.forEach(async (item) => {
+    if(item.width) return;
+    try{
+      const dims = await getImageDimensionsFromUrl(item.url);
+      item.width = dims.width; item.height = dims.height;
+      renderImagePreview();
+    }catch(err){ /* ignore */ }
+  });
+}
+function closeArtworkDrawer(){ artworkOverlay.classList.remove('open'); }
+
+document.getElementById('af-images').addEventListener('change', async (e) => {
+  const newItems = [...e.target.files].map(file => ({file, url: URL.createObjectURL(file), existing:false}));
+  pendingImages.push(...newItems);
+  renderImagePreview();
+  e.target.value = ''; // allow re-selecting the same file again later
+  for(const item of newItems){
+    try{
+      const dims = await getImageDimensionsFromUrl(item.url);
+      item.width = dims.width; item.height = dims.height;
+    }catch(err){ /* leave dims unknown, no blocking */ }
+    renderImagePreview();
+  }
+});
+function renderImagePreview(){
+  const el = document.getElementById('af-image-preview');
+  el.innerHTML = pendingImages.map((img,i) => {
+    let dimHTML = '';
+    if(img.width && img.height){
+      const bad = dimsMismatch(img, ARTWORK_IMAGE_SPEC);
+      dimHTML = `<div class="thumb-dim ${bad?'warn':'ok'}">${img.width}×${img.height}${bad?' ⚠':' ✓'}</div>`;
+    }
+    return `<div class="thumb-wrap"><img src="${img.url}"><button type="button" class="rm" data-rm="${i}">×</button>${dimHTML}</div>`;
+  }).join('');
+  el.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
+    pendingImages.splice(parseInt(b.dataset.rm),1);
+    renderImagePreview();
+  }));
+
+  const overrideWrap = document.getElementById('af-override-wrap');
+  const anyMismatch = pendingImages.some(img => img.width && dimsMismatch(img, ARTWORK_IMAGE_SPEC));
+  if(anyMismatch){
+    overrideWrap.style.display = 'flex';
+  } else {
+    overrideWrap.style.display = 'none';
+    document.getElementById('af-override').checked = false;
+  }
+}
+function updateDimPreview(){
+  const w = document.getElementById('af-width').value;
+  const h = document.getElementById('af-height').value;
+  const u = document.getElementById('af-unit').value;
+  document.getElementById('af-dim-preview').textContent = 'Preview: ' + (w&&h ? formatDimension(w,h,u) : '—');
+}
+['af-width','af-height','af-unit'].forEach(id => document.getElementById(id).addEventListener('input', updateDimPreview));
+
+document.getElementById('artworkForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const anyMismatch = pendingImages.some(img => img.width && dimsMismatch(img, ARTWORK_IMAGE_SPEC));
+  if(anyMismatch && !document.getElementById('af-override').checked){
+    toast("One or more images don't match the recommended 4:5 size. Check the confirmation box to publish anyway, or replace them.", true);
+    return;
+  }
+  const btn = document.getElementById('af-submit-btn');
+  btn.disabled = true;
+  const progressEl = document.getElementById('af-upload-progress');
+  try{
+    // Upload any new files to Cloudinary
+    const finalImages = [];
+    let uploadedCount = 0;
+    const newCount = pendingImages.filter(i=>!i.existing).length;
+    for(const img of pendingImages){
+      if(img.existing){ finalImages.push({url: img.url, publicId: img.publicId}); continue; }
+      uploadedCount++;
+      progressEl.textContent = `Uploading image ${uploadedCount} of ${newCount}...`;
+      const uploaded = await uploadToCloudinary(img.file, 'artworks');
+      finalImages.push(uploaded);
+    }
+    progressEl.textContent = '';
+
+    const data = {
+      title: document.getElementById('af-title').value,
+      description: document.getElementById('af-description').value,
+      category: document.getElementById('af-category').value,
+      medium: document.getElementById('af-medium').value,
+      width: parseFloat(document.getElementById('af-width').value),
+      height: parseFloat(document.getElementById('af-height').value),
+      unit: document.getElementById('af-unit').value,
+      price: document.getElementById('af-price').value,
+      status: document.getElementById('af-status').value,
+      featured: document.getElementById('af-featured').checked,
+      images: finalImages,
+      updatedAt: serverTimestamp()
+    };
+
+    if(editingArtworkId){
+      await updateDoc(doc(db,'artworks',editingArtworkId), data);
+      toast('Artwork updated');
+    } else {
+      data.createdAt = serverTimestamp();
+      data.views = 0; data.favoritesCount = 0; data.whatsappClicks = 0;
+      await addDoc(collection(db,'artworks'), data);
+      toast('Artwork published to the website');
+    }
+    closeArtworkDrawer();
+  }catch(err){
+    toast('Save failed: '+(err.message||err.code), true);
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+/* ============================================================
+   INQUIRIES
+   ============================================================ */
+function renderInquiryTable(){
+  const tbody = document.getElementById('inquiryTableBody');
+  const search = (document.getElementById('inquirySearch').value||'').toLowerCase();
+  const statusF = document.getElementById('inquiryStatusFilter').value;
+  const dateF = document.getElementById('inquiryDateFilter').value;
+
+  let list = inquiries.filter(i => {
+    if(search){
+      const hay = `${i.name||''} ${i.email||''} ${i.artworkTitle||''}`.toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    if(statusF!=='all' && i.status!==statusF) return false;
+    if(dateF){
+      const d = i.createdAt && i.createdAt.toDate ? i.createdAt.toDate() : null;
+      if(!d) return false;
+      const iso = d.toISOString().slice(0,10);
+      if(iso !== dateF) return false;
+    }
+    return true;
+  });
+
+  if(!list.length){ tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No inquiries yet. They'll appear here the moment a visitor submits the form on your site.</div></td></tr>`; return; }
+
+  tbody.innerHTML = list.map(i => `
+    <tr>
+      <td><div class="row-title"><div><div class="t">${i.name||'Unknown'}</div><div class="m">${i.email||''}</div></div></div></td>
+      <td>${i.artworkTitle ? `<div class="row-title"><img class="thumb" src="${i.artworkImage||''}" alt="">${i.artworkTitle}</div>` : '<span style="color:var(--ink-soft);">General inquiry</span>'}</td>
+      <td style="max-width:220px;">${(i.message||'').slice(0,60)}${(i.message||'').length>60?'…':''}</td>
+      <td class="mono" style="font-size:.76rem;">${fmtDate(i.createdAt)}</td>
+      <td><span class="badge ${i.status}">${i.status}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-view-inq="${i.id}">Open</button>
+        <button class="icon-btn danger" data-del-inq="${i.id}">Delete</button>
+      </div></td>
+    </tr>`).join('');
+
+  tbody.querySelectorAll('[data-view-inq]').forEach(b => b.addEventListener('click', () => openInquiryDrawer(b.dataset.viewInq)));
+  tbody.querySelectorAll('[data-del-inq]').forEach(b => b.addEventListener('click', () => deleteInquiry(b.dataset.delInq)));
+}
+document.getElementById('inquirySearch').addEventListener('input', renderInquiryTable);
+document.getElementById('inquiryStatusFilter').addEventListener('change', renderInquiryTable);
+document.getElementById('inquiryDateFilter').addEventListener('change', renderInquiryTable);
+
+async function deleteInquiry(id){
+  if(!confirm('Delete this inquiry?')) return;
+  try{ await deleteDoc(doc(db,'inquiries',id)); toast('Inquiry deleted'); }
+  catch(e){ toast('Failed to delete', true); }
+}
+
+const inquiryOverlay = document.getElementById('inquiryDrawerOverlay');
+document.getElementById('inquiryDrawerClose').addEventListener('click', () => inquiryOverlay.classList.remove('open'));
+inquiryOverlay.addEventListener('click', (e) => { if(e.target===inquiryOverlay) inquiryOverlay.classList.remove('open'); });
+
+async function openInquiryDrawer(id){
+  const i = inquiries.find(x=>x.id===id);
+  if(!i) return;
+  const body = document.getElementById('inquiryDetailBody');
+  body.innerHTML = `
+    ${i.artworkTitle ? `<div class="inq-artwork-card"><img src="${i.artworkImage||''}" alt=""><div><div style="font-family:'Fraunces',serif;">${i.artworkTitle}</div><div class="mono" style="font-size:.7rem;color:var(--ink-soft);">Linked Artwork</div></div></div>` : ''}
+    <div class="status-select-row">
+      ${['new','read','replied','closed'].map(s => `<button class="icon-btn" data-set-status="${s}" style="${i.status===s ? 'background:var(--ink);color:#fff;' : ''}">${s}</button>`).join('')}
+    </div>
+    <div class="inq-detail-row"><div class="lbl">Full Name</div><div class="val">${i.name||'—'}</div></div>
+    <div class="inq-detail-row"><div class="lbl">Email Address</div><div class="val">${i.email||'—'}</div></div>
+    <div class="inq-detail-row"><div class="lbl">Mobile Number</div><div class="val">${i.mobile||'—'}</div></div>
+    <div class="inq-detail-row"><div class="lbl">Message</div><div class="val">${(i.message||'').replace(/\\n/g,'<br>')}</div></div>
+    <div class="inq-detail-row"><div class="lbl">Submitted</div><div class="val">${fmtDate(i.createdAt)}</div></div>
+    <div class="drawer-actions">
+      <button class="btn danger sm" id="inq-delete-btn">Delete Inquiry</button>
+    </div>
+  `;
+  body.querySelectorAll('[data-set-status]').forEach(b => b.addEventListener('click', async () => {
+    try{ await updateDoc(doc(db,'inquiries',id), {status:b.dataset.setStatus}); toast('Status updated'); openInquiryDrawer(id); }
+    catch(e){ toast('Failed to update', true); }
+  }));
+  document.getElementById('inq-delete-btn').addEventListener('click', async () => { await deleteInquiry(id); inquiryOverlay.classList.remove('open'); });
+
+  if(i.status === 'new'){
+    try{ await updateDoc(doc(db,'inquiries',id), {status:'read'}); }catch(e){}
+  }
+  inquiryOverlay.classList.add('open');
+}
+
+/* ============================================================
+   CATEGORIES
+   ============================================================ */
+function renderCategoryTable(){
+  const tbody = document.getElementById('categoryTableBody');
+  if(!categories.length){ tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state">No categories yet. Add one so it appears as a filter on the website.</div></td></tr>`; return; }
+  tbody.innerHTML = categories.map(c => {
+    const count = artworks.filter(a=>a.category===c.name).length;
+    return `<tr>
+      <td>${c.name}</td>
+      <td class="mono">${count}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-edit-cat="${c.id}">Edit</button>
+        <button class="icon-btn danger" data-del-cat="${c.id}">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  tbody.querySelectorAll('[data-edit-cat]').forEach(b => b.addEventListener('click', () => openCategoryDrawer(b.dataset.editCat)));
+  tbody.querySelectorAll('[data-del-cat]').forEach(b => b.addEventListener('click', () => deleteCategory(b.dataset.delCat)));
+}
+
+const categoryOverlay = document.getElementById('categoryDrawerOverlay');
+document.getElementById('addCategoryBtn').addEventListener('click', () => openCategoryDrawer(null));
+document.getElementById('categoryDrawerClose').addEventListener('click', () => categoryOverlay.classList.remove('open'));
+document.getElementById('categoryDrawerCancel').addEventListener('click', () => categoryOverlay.classList.remove('open'));
+categoryOverlay.addEventListener('click', (e) => { if(e.target===categoryOverlay) categoryOverlay.classList.remove('open'); });
+
+function openCategoryDrawer(id){
+  document.getElementById('categoryForm').reset();
+  document.getElementById('cf-id').value = id || '';
+  if(id){
+    const c = categories.find(x=>x.id===id);
+    document.getElementById('categoryDrawerTitle').textContent = 'Edit Category';
+    document.getElementById('cf-name').value = c.name;
+  } else {
+    document.getElementById('categoryDrawerTitle').textContent = 'Add Category';
+  }
+  categoryOverlay.classList.add('open');
+}
+document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('cf-id').value;
+  const name = document.getElementById('cf-name').value.trim();
+  try{
+    if(id){ await updateDoc(doc(db,'categories',id), {name}); toast('Category updated'); }
+    else { await addDoc(collection(db,'categories'), {name, createdAt: serverTimestamp()}); toast('Category added'); }
+    categoryOverlay.classList.remove('open');
+  }catch(err){ toast('Failed to save category', true); }
+});
+async function deleteCategory(id){
+  if(!confirm('Delete this category? Artworks using it will keep the old category name as plain text.')) return;
+  try{ await deleteDoc(doc(db,'categories',id)); toast('Category deleted'); }
+  catch(e){ toast('Failed to delete', true); }
+}
+
+/* ============================================================
+   SITE IMAGES (Homepage banner / Artist photo / Gallery highlights)
+   ============================================================ */
+let currentSiteImageTab = 'homepage';
+
+// Each section on the customer website expects a different shape of
+// photo. These specs drive both the on-screen guidance and the
+// validation before upload.
+const SITE_IMAGE_SPECS = {
+  homepage: {
+    label: 'Homepage Banner',
+    width: 1920, height: 1080, ratioLabel: '16:9 landscape',
+    minWidth: 1200, minHeight: 675,
+    note: 'Full-width hero image behind the headline text. Use a wide, high-resolution landscape photo — it gets darkened slightly and text sits on top of it.'
+  },
+  artist: {
+    label: 'Artist Photo',
+    width: 1000, height: 1250, ratioLabel: '4:5 portrait',
+    minWidth: 600, minHeight: 750,
+    note: 'Portrait photo of Asaj shown next to his bio in the "About" section. A vertical, well-lit portrait works best.'
+  },
+  gallery: {
+    label: 'Gallery Highlight',
+    width: 1000, height: 1250, ratioLabel: '4:5 portrait',
+    minWidth: 600, minHeight: 750,
+    note: 'Shown in the "Gallery Highlights" strip on the homepage, alongside Featured and New Arrivals. Same portrait shape as those.'
+  }
+};
+
+let siSelectedDims = null;
+
+function renderSiDimGuide(){
+  const spec = SITE_IMAGE_SPECS[document.getElementById('si-section').value];
+  document.getElementById('si-dim-guide').innerHTML = `
+    <div class="dim-guide-size">${spec.width} × ${spec.height}px <span class="dim-guide-ratio">(${spec.ratioLabel})</span></div>
+    <div class="dim-guide-note">${spec.note}</div>`;
+}
+
+async function checkSiImageDims(){
+  const checkEl = document.getElementById('si-dim-check');
+  const overrideWrap = document.getElementById('si-override-wrap');
+  const overrideCb = document.getElementById('si-override');
+  const file = document.getElementById('si-file').files[0];
+  siSelectedDims = null;
+  overrideCb.checked = false;
+  overrideWrap.style.display = 'none';
+  checkEl.innerHTML = '';
+  if(!file) return;
+
+  const spec = SITE_IMAGE_SPECS[document.getElementById('si-section').value];
+  try{
+    const dims = await getImageDimensionsFromUrl(URL.createObjectURL(file));
+    siSelectedDims = dims;
+    if(dimsMismatch(dims, spec)){
+      checkEl.innerHTML = `<div class="dim-check warn">⚠ This image is ${dims.width} × ${dims.height}px. Recommended is ${spec.width} × ${spec.height}px (${spec.ratioLabel}) — it may appear cropped, stretched, or soft on the site.</div>`;
+      overrideWrap.style.display = 'flex';
+    } else {
+      checkEl.innerHTML = `<div class="dim-check ok">✓ ${dims.width} × ${dims.height}px — matches the recommended size.</div>`;
+    }
+  }catch(err){
+    checkEl.innerHTML = `<div class="dim-check warn">Could not read this image's dimensions — you can still upload it.</div>`;
+  }
+}
+
+document.getElementById('si-section').addEventListener('change', (e) => {
+  const featuredCb = document.getElementById('si-featured');
+  if(e.target.value === 'homepage'){
+    featuredCb.checked = true;
+    featuredCb.disabled = true;
+  } else {
+    featuredCb.disabled = false;
+  }
+  renderSiDimGuide();
+  checkSiImageDims();
+});
+document.getElementById('si-file').addEventListener('change', checkSiImageDims);
+renderSiDimGuide();
+
+document.getElementById('siteImageForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('si-submit-btn');
+  const progress = document.getElementById('si-upload-progress');
+  const file = document.getElementById('si-file').files[0];
+  if(!file){ toast('Choose an image first', true); return; }
+
+  const section = document.getElementById('si-section').value;
+  const spec = SITE_IMAGE_SPECS[section];
+  if(siSelectedDims && dimsMismatch(siSelectedDims, spec) && !document.getElementById('si-override').checked){
+    toast("This image doesn't match the recommended size. Check the confirmation box to upload it anyway, or choose a different image.", true);
+    return;
+  }
+
+  btn.disabled = true;
+  progress.textContent = 'Uploading to Cloudinary...';
+  try{
+    const featured = section === 'homepage' ? true : document.getElementById('si-featured').checked;
+    const { url, publicId } = await uploadToCloudinary(file, `site/${section}`);
+    await addDoc(collection(db,'siteImages'), { url, publicId, section, featured, createdAt: serverTimestamp() });
+    toast('Image uploaded and published to the website');
+    document.getElementById('siteImageForm').reset();
+    document.getElementById('si-featured').disabled = false;
+    siSelectedDims = null;
+    document.getElementById('si-dim-check').innerHTML = '';
+    document.getElementById('si-override-wrap').style.display = 'none';
+    renderSiDimGuide();
+  }catch(err){
+    toast('Upload failed: '+err.message, true);
+  }finally{
+    progress.textContent = '';
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('simgTabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if(!b) return;
+  currentSiteImageTab = b.dataset.tab;
+  document.querySelectorAll('#simgTabs .tab-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  renderSiteImages();
+});
+
+function renderSiteImages(){
+  const grid = document.getElementById('siteImagesGrid');
+  if(!grid) return;
+  const list = siteImages.filter(i => i.section === currentSiteImageTab).sort((a,b) => millis(b.createdAt)-millis(a.createdAt));
+  if(!list.length){ grid.innerHTML = `<div class="empty-state">No images in this section yet. Upload one above.</div>`; return; }
+  grid.innerHTML = list.map(i => `
+    <div class="simg-card">
+      <img src="${i.url}" alt="">
+      <div class="simg-body">
+        <div class="simg-meta ${i.featured?'on':''}">${i.featured ? '★ Featured on Homepage' : 'Not featured'}</div>
+        <div class="simg-actions">
+          ${i.section === 'homepage'
+            ? ''
+            : `<button class="icon-btn" data-toggle-feat="${i.id}">${i.featured ? 'Unfeature' : 'Feature on Homepage'}</button>`}
+          <button class="icon-btn danger" data-del-simg="${i.id}">Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+  grid.querySelectorAll('[data-toggle-feat]').forEach(b => b.addEventListener('click', () => toggleFeatureSiteImage(b.dataset.toggleFeat)));
+  grid.querySelectorAll('[data-del-simg]').forEach(b => b.addEventListener('click', () => deleteSiteImage(b.dataset.delSimg)));
+}
+
+async function toggleFeatureSiteImage(id){
+  const img = siteImages.find(i=>i.id===id);
+  if(!img) return;
+  try{
+    await updateDoc(doc(db,'siteImages',id), { featured: !img.featured });
+    toast('Updated');
+  }catch(e){ toast('Failed to update', true); }
+}
+
+async function deleteSiteImage(id){
+  if(!confirm('Delete this image? This cannot be undone.')) return;
+  const img = siteImages.find(i=>i.id===id);
+  try{
+    await deleteDoc(doc(db,'siteImages',id));
+    if(img) await deleteFromCloudinary(img.publicId);
+    toast('Image deleted');
+  }catch(e){ toast('Failed to delete', true); }
+}
+
+/* ============================================================
+   ANALYTICS
+   ============================================================ */
+function renderAnalytics(){
+  const sortBy = document.getElementById('analyticsSort').value;
+  const inqCounts = {};
+  inquiries.forEach(i => { if(i.artworkId) inqCounts[i.artworkId] = (inqCounts[i.artworkId]||0)+1; });
+
+  let list = artworks.map(a => ({
+    ...a, inquiryCount: inqCounts[a.id]||0
+  }));
+  const key = {views:'views', inquiries:'inquiryCount', whatsapp:'whatsappClicks', favorites:'favoritesCount'}[sortBy];
+  list.sort((a,b) => (b[key]||0)-(a[key]||0));
+
+  const tbody = document.getElementById('analyticsTableBody');
+  if(!list.length){ tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">No artworks to analyze yet.</div></td></tr>`; return; }
+  tbody.innerHTML = list.map(a => `
+    <tr>
+      <td><div class="row-title"><img class="thumb" src="${firstImage(a)}" alt="">${a.title||'Untitled'}</div></td>
+      <td class="mono">${a.views||0}</td>
+      <td class="mono">${a.inquiryCount||0}</td>
+      <td class="mono">${a.whatsappClicks||0}</td>
+      <td class="mono">${a.favoritesCount||0}</td>
+    </tr>`).join('');
+}
+document.getElementById('analyticsSort').addEventListener('change', renderAnalytics);
+</script>
+</body>
+</html>

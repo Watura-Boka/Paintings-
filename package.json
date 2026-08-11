@@ -1,0 +1,17 @@
+{
+  "name": "asaj-perera-image-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Signs Cloudinary uploads/deletes for the Asaj Perera Gallery admin dashboard, keeping the Cloudinary API secret server-side.",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cloudinary": "^2.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.3.1"
+  }
+}

@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asaj Perera — Original Paintings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EF;
+    --paper-deep:#F1E8D6;
+    --ink:#26211B;
+    --ink-soft:#6E6555;
+    --gold:#A9822F;
+    --gold-bright:#C79A3D;
+    --wall:#171310;
+    --wall-soft:#241F19;
+    --brick:#8B3A3A;
+    --line: rgba(38,33,27,0.12);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:.72rem;
+    color:var(--gold);
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(251,247,239,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .navrow{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 32px;max-width:1200px;margin:0 auto;
+  }
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem;letter-spacing:.01em;}
+  .logo em{font-style:italic;color:var(--gold);}
+  nav.links{display:flex;gap:28px;align-items:center;}
+  nav.links a{font-size:.88rem;letter-spacing:.02em;color:var(--ink-soft);transition:color .2s;position:relative;}
+  nav.links a:hover{color:var(--ink);}
+  .fav-nav-btn{
+    display:flex;align-items:center;gap:6px;font-size:.88rem;color:var(--ink-soft);
+    background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .fav-nav-btn:hover{color:var(--ink);}
+  .fav-count{
+    background:var(--gold);color:#fff;font-family:'Space Mono',monospace;
+    font-size:.64rem;padding:1px 6px;border-radius:20px;
+  }
+  .btn-gold{
+    background:var(--ink);color:var(--paper);
+    padding:11px 22px;font-size:.82rem;letter-spacing:.03em;
+    border:1px solid var(--ink);
+    transition:all .25s ease;
+    display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;
+  }
+  .btn-gold:hover{background:var(--gold);border-color:var(--gold);color:var(--wall);}
+  .btn-outline{
+    background:transparent;color:var(--ink);
+    padding:10px 21px;font-size:.82rem;letter-spacing:.03em;
+    border:1px solid var(--ink);
+    transition:all .25s ease;cursor:pointer;
+  }
+  .btn-outline:hover{background:var(--ink);color:var(--paper);}
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .menu-toggle span{display:block;width:24px;height:1.5px;background:var(--ink);margin:5px 0;}
+  @media(max-width:960px){
+    nav.links{display:none;}
+    .menu-toggle{display:block;}
+    .navrow{padding:18px 20px;}
+  }
+  .mobile-panel{
+    display:none;flex-direction:column;gap:0;
+    border-top:1px solid var(--line);
+    background:var(--paper);
+  }
+  .mobile-panel.open{display:flex;}
+  .mobile-panel a, .mobile-panel button{padding:16px 20px;border-bottom:1px solid var(--line);font-size:.95rem;text-align:left;background:none;border-left:none;border-right:none;border-top:none;font-family:'Inter',sans-serif;color:var(--ink);cursor:pointer;}
+  .mobile-panel .btn-gold{margin:16px 20px;justify-content:center;border-bottom:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;min-height:92vh;display:flex;align-items:flex-end;
+    overflow:hidden;background:var(--wall);
+  }
+  .hero-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:.62;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(23,19,16,.35) 0%, rgba(23,19,16,.55) 55%, rgba(23,19,16,.94) 100%),
+               linear-gradient(90deg, rgba(23,19,16,.85) 0%, rgba(23,19,16,.2) 55%);
+  }
+  .hero-inner{position:relative;z-index:2;padding:0 32px 76px;max-width:1200px;margin:0 auto;width:100%;color:#F4EFE3;}
+  .hero .eyebrow{color:var(--gold-bright);margin-bottom:18px;display:block;}
+  .hero h1{
+    font-family:'Fraunces',serif;font-weight:450;
+    font-size:clamp(2.6rem,6.2vw,5.2rem);
+    line-height:1.03;letter-spacing:-.01em;max-width:820px;margin:0 0 22px;
+  }
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--gold-bright);}
+  .hero p.lede{font-size:1.08rem;line-height:1.6;max-width:500px;color:#DCD4C4;margin:0 0 34px;font-weight:400;}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:30px;}
+  .hero .btn-outline{border-color:#DCD4C4;color:#F4EFE3;}
+  .hero .btn-outline:hover{background:#F4EFE3;color:var(--wall);}
+  .hero .btn-gold{background:var(--gold-bright);border-color:var(--gold-bright);color:var(--wall);}
+  .hero .btn-gold:hover{background:#F4EFE3;border-color:#F4EFE3;}
+
+  .hero-search{
+    display:flex;max-width:420px;background:rgba(23,19,16,.5);border:1px solid rgba(244,239,227,.35);
+  }
+  .hero-search input{
+    flex:1;background:none;border:none;padding:14px 16px;color:#F4EFE3;font-family:'Inter',sans-serif;font-size:.9rem;
+  }
+  .hero-search input::placeholder{color:#B9AF9C;}
+  .hero-search input:focus{outline:none;}
+  .hero-search button{
+    background:var(--gold-bright);border:none;padding:0 20px;color:var(--wall);cursor:pointer;font-size:.85rem;
+  }
+
+  /* ticker */
+  .ticker{
+    position:relative;z-index:2;background:var(--gold);overflow:hidden;
+    border-top:1px solid rgba(0,0,0,.08);
+  }
+  .ticker-track{
+    display:flex;white-space:nowrap;animation:scroll 34s linear infinite;
+    padding:13px 0;
+  }
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  .ticker-track span{
+    font-family:'Space Mono',monospace;font-size:.76rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--wall);margin-right:48px;
+  }
+  @media (prefers-reduced-motion: reduce){.ticker-track{animation:none;overflow-x:auto;}}
+
+  /* ---------- SECTION generic ---------- */
+  section{padding:120px 0;}
+  @media(max-width:640px){section{padding:76px 0;}}
+  .section-head{max-width:640px;margin-bottom:60px;}
+  .section-head .eyebrow{display:block;margin-bottom:14px;}
+  .section-head h2{font-family:'Fraunces',serif;font-weight:450;font-size:clamp(2rem,4vw,2.9rem);margin:0 0 18px;line-height:1.1;}
+  .section-head h2 em{font-style:italic;color:var(--gold);}
+  .section-head p{color:var(--ink-soft);line-height:1.7;font-size:1.02rem;margin:0;}
+
+  /* ---------- FEATURED / NEW ARRIVALS strips ---------- */
+  .strip-section{padding:90px 0 30px;}
+  .strip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  @media(max-width:900px){.strip-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.strip-grid{grid-template-columns:1fr;}}
+  .strip-card{position:relative;overflow:hidden;background:var(--wall);cursor:pointer;}
+  .strip-card img{width:100%;aspect-ratio:4/5;object-fit:cover;transition:transform .5s ease;opacity:.92;}
+  .strip-card:hover img{transform:scale(1.04);}
+  .strip-card .cap{
+    position:absolute;left:0;right:0;bottom:0;padding:18px 18px 16px;
+    background:linear-gradient(0deg, rgba(23,19,16,.92), rgba(23,19,16,0));color:#F4EFE3;
+  }
+  .strip-card .cap .t{font-family:'Fraunces',serif;font-size:1.05rem;}
+  .strip-card .cap .m{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--gold-bright);margin-top:3px;}
+  .strip-empty{color:var(--ink-soft);font-size:.9rem;font-family:'Space Mono',monospace;}
+
+  /* ---------- ABOUT TEASER ---------- */
+  .story{background:var(--paper-deep);}
+  .story .grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:72px;align-items:center;}
+  @media(max-width:860px){.story .grid{grid-template-columns:1fr;gap:44px;}}
+  .story-photo{position:relative;}
+  .story-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 25%;background:var(--wall);}
+  .story-photo .frame{
+    position:absolute;inset:18px;border:1px solid rgba(244,239,227,.55);pointer-events:none;
+  }
+  .story-stats{display:flex;gap:40px;margin-top:36px;flex-wrap:wrap;}
+  .story-stats div{}
+  .story-stats .num{font-family:'Fraunces',serif;font-size:2.2rem;color:var(--gold);font-weight:500;}
+  .story-stats .lbl{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+  .story-copy .eyebrow{display:block;margin-bottom:14px;}
+  .story-copy h2{font-family:'Fraunces',serif;font-weight:450;font-size:clamp(1.9rem,3.4vw,2.6rem);line-height:1.12;margin:0 0 22px;}
+  .story-copy h2 em{font-style:italic;color:var(--gold);}
+  .story-copy p{color:var(--ink-soft);line-height:1.8;font-size:1.02rem;margin:0 0 16px;}
+  .story-copy .signature{font-family:'Fraunces',serif;font-style:italic;font-size:1.3rem;margin-top:22px;color:var(--ink);}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:32px;}
+  .gallery-toolbar{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:40px;
+    padding:18px;background:var(--paper-deep);border:1px solid var(--line);
+  }
+  .gallery-toolbar input[type=text], .gallery-toolbar select{
+    font-family:'Inter',sans-serif;font-size:.85rem;padding:10px 12px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink);
+  }
+  .gallery-toolbar input[type=text]{flex:1;min-width:180px;}
+  .gallery-toolbar select{cursor:pointer;}
+  .filters{display:flex;gap:10px;flex-wrap:wrap;}
+  .filter-btn{
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+    padding:9px 16px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+    cursor:pointer;transition:all .2s;
+  }
+  .filter-btn:hover{border-color:var(--ink);color:var(--ink);}
+  .filter-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+  .gallery-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:38px;
+  }
+  @media(max-width:980px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.gallery-grid{grid-template-columns:1fr;gap:44px;}}
+
+  .card{
+    opacity:0;transform:translateY(24px);transition:opacity .6s ease, transform .6s ease;
+  }
+  .card.in{opacity:1;transform:translateY(0);}
+  .card-frame{
+    background:var(--wall);
+    padding:34px 22px 26px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card-frame::after{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), rgba(0,0,0,0) 55%);
+    pointer-events:none;
+  }
+  .card-frame img{
+    width:100%;aspect-ratio:4/5;object-fit:cover;
+    box-shadow:0 22px 40px -14px rgba(0,0,0,.65);
+    transition:transform .5s ease;
+  }
+  .card:hover .card-frame img{transform:scale(1.025);}
+  .status-badge{
+    position:absolute;top:16px;left:16px;
+    font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 11px;z-index:2;
+  }
+  .status-badge.available{background:var(--gold-bright);color:var(--wall);}
+  .status-badge.reserved{background:transparent;color:#F4EFE3;border:1px solid rgba(244,239,227,.6);}
+  .status-badge.sold{
+    background:var(--brick);color:#F4EFE3;
+  }
+  .fav-toggle{
+    position:absolute;top:14px;right:14px;z-index:2;background:rgba(23,19,16,.55);
+    border:1px solid rgba(244,239,227,.4);width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#F4EFE3;
+    transition:background .2s;
+  }
+  .fav-toggle:hover{background:rgba(23,19,16,.85);}
+  .fav-toggle.active{color:var(--brick);background:#F4EFE3;border-color:#F4EFE3;}
+  .plaque{
+    border:1px solid var(--line);border-top:none;
+    padding:20px 22px 22px;background:var(--paper);
+  }
+  .plaque .ttl{font-family:'Fraunces',serif;font-size:1.22rem;font-weight:500;margin:0 0 6px;}
+  .plaque .meta{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--ink-soft);letter-spacing:.02em;margin:0 0 10px;}
+  .plaque .story-line{font-size:.86rem;color:var(--ink-soft);line-height:1.55;margin:0 0 14px;}
+  .plaque .bottom-row{display:flex;justify-content:space-between;align-items:center;}
+  .plaque .price{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--gold);}
+  .plaque .price .strike{color:var(--ink-soft);text-decoration:line-through;font-size:.9rem;margin-right:6px;}
+  .inquire-link{
+    font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+    border-bottom:1px solid var(--ink);padding-bottom:2px;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;color:var(--ink);
+  }
+  .inquire-link:hover{color:var(--gold);border-color:var(--gold);}
+  .inquire-link[disabled]{opacity:.4;cursor:not-allowed;}
+
+  .gallery-more{text-align:center;margin-top:64px;}
+  .gallery-empty{text-align:center;padding:60px 0;color:var(--ink-soft);font-family:'Space Mono',monospace;font-size:.85rem;grid-column:1/-1;}
+
+  /* ---------- WHY / PROCESS ---------- */
+  .process{background:var(--wall);color:#F4EFE3;}
+  .process .section-head p{color:#B9AF9C;}
+  .process .section-head .eyebrow{color:var(--gold-bright);}
+  .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(244,239,227,.14);}
+  @media(max-width:900px){.process-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.process-grid{grid-template-columns:1fr;}}
+  .process-step{background:var(--wall);padding:38px 30px;}
+  .process-step .step-no{font-family:'Space Mono',monospace;color:var(--gold-bright);font-size:.78rem;letter-spacing:.06em;}
+  .process-step h3{font-family:'Fraunces',serif;font-weight:450;font-size:1.28rem;margin:16px 0 12px;}
+  .process-step p{color:#B9AF9C;font-size:.92rem;line-height:1.65;margin:0;}
+
+  /* ---------- CREDENTIALS ---------- */
+  .credentials{background:var(--wall);color:#F4EFE3;}
+  .credentials .section-head p{color:#B9AF9C;}
+  .credentials .section-head .eyebrow{color:var(--gold-bright);}
+  .cred-highlight{
+    border:1px solid var(--gold-bright);background:rgba(199,154,61,.07);
+    padding:30px 34px;margin-bottom:56px;
+  }
+  .cred-highlight .eyebrow{color:var(--gold-bright);display:block;margin-bottom:10px;}
+  .cred-highlight p{font-family:'Fraunces',serif;font-size:1.28rem;line-height:1.5;font-weight:450;margin:0;color:#F4EFE3;}
+  .cred-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(244,239,227,.14);}
+  @media(max-width:900px){.cred-grid{grid-template-columns:1fr;}}
+  .cred-col{background:var(--wall);padding:38px 34px;}
+  .cred-col h3{font-family:'Fraunces',serif;font-weight:450;font-size:1.1rem;margin:0 0 24px;color:var(--gold-bright);}
+  .cred-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px;}
+  .cred-list li{font-size:.9rem;line-height:1.6;color:#D8CFBC;border-bottom:1px solid rgba(244,239,227,.1);padding-bottom:16px;}
+  .cred-list li:last-child{border-bottom:none;padding-bottom:0;}
+  .cred-list .yr{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--gold-bright);letter-spacing:.06em;display:block;margin-bottom:5px;}
+
+  /* ---------- ABOUT FULL ---------- */
+  .about{background:var(--paper);}
+  .about .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:72px;}
+  @media(max-width:860px){.about .grid{grid-template-columns:1fr;gap:44px;}}
+  .about-copy p{color:var(--ink-soft);line-height:1.85;font-size:1.03rem;margin:0 0 20px;}
+  .about-copy .drop{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--ink);margin-bottom:22px;line-height:1.4;font-weight:450;}
+  .about-copy .drop em{font-style:italic;color:var(--gold);}
+  .about-facts{border-top:1px solid var(--line);}
+  .about-facts .row{
+    display:flex;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--line);
+    font-size:.92rem;gap:16px;
+  }
+  .about-facts .row span:first-child{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);flex-shrink:0;}
+  .about-facts .row span:last-child{text-align:right;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{background:var(--paper-deep);}
+  .contact .grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;}
+  @media(max-width:860px){.contact .grid{grid-template-columns:1fr;gap:48px;}}
+  .contact-channels{display:flex;flex-direction:column;gap:14px;margin-top:8px;}
+  .channel{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 24px;border:1px solid var(--line);background:var(--paper);
+    transition:border-color .2s;
+  }
+  .channel:hover{border-color:var(--gold);}
+  .channel .cname{font-family:'Fraunces',serif;font-size:1.08rem;}
+  .channel .csub{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--ink-soft);letter-spacing:.04em;}
+  .channel .arrow{font-size:1.2rem;color:var(--gold);}
+
+  form.inquiry-form{display:flex;flex-direction:column;gap:16px;}
+  form.inquiry-form label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;display:block;}
+  form.inquiry-form input, form.inquiry-form textarea, form.inquiry-form select{
+    width:100%;padding:13px 14px;border:1px solid var(--line);background:var(--paper);
+    font-family:'Inter',sans-serif;font-size:.94rem;color:var(--ink);
+  }
+  form.inquiry-form input:focus, form.inquiry-form textarea:focus, form.inquiry-form select:focus{
+    outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);
+  }
+  form.inquiry-form textarea{resize:vertical;min-height:100px;}
+  .form-note{font-size:.8rem;padding:10px 0;display:none;}
+  .form-note.show{display:block;}
+  .form-note.ok{color:#3E7A4B;}
+  .form-note.err{color:var(--brick);}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--wall);color:#D8CFBC;padding:70px 0 30px;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;margin-bottom:56px;}
+  @media(max-width:700px){.footer-grid{grid-template-columns:1fr;gap:36px;}}
+  footer .logo{color:#F4EFE3;}
+  footer p.tag{color:#8F8571;font-size:.92rem;line-height:1.7;max-width:320px;margin-top:16px;}
+  footer h4{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-bright);margin:0 0 18px;}
+  footer .flist{display:flex;flex-direction:column;gap:12px;}
+  footer .flist a{font-size:.9rem;color:#D8CFBC;transition:color .2s;}
+  footer .flist a:hover{color:var(--gold-bright);}
+  .footer-bottom{
+    border-top:1px solid rgba(244,239,227,.12);padding-top:26px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:.78rem;color:#8F8571;
+  }
+
+  /* ---------- WHATSAPP FAB ---------- */
+  .fab{
+    position:fixed;bottom:26px;right:26px;z-index:90;
+    background:var(--gold-bright);color:var(--wall);
+    padding:14px 20px;font-family:'Space Mono',monospace;font-size:.76rem;letter-spacing:.03em;
+    display:flex;align-items:center;gap:9px;box-shadow:0 10px 30px -8px rgba(0,0,0,.4);
+    transition:transform .2s ease;cursor:pointer;border:none;
+  }
+  .fab:hover{transform:translateY(-3px);}
+  @media(max-width:640px){.fab span.fab-text{display:none;} .fab{padding:14px;border-radius:50%;}}
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(23,19,16,.72);z-index:200;
+    display:none;align-items:center;justify-content:center;padding:24px;
+    backdrop-filter:blur(3px);
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--paper);max-width:460px;width:100%;
+    padding:38px 34px 34px;position:relative;
+    max-height:88vh;overflow-y:auto;
+  }
+  .modal.wide{max-width:640px;}
+  .modal-close{
+    position:absolute;top:18px;right:18px;background:none;border:none;
+    font-size:1.4rem;cursor:pointer;color:var(--ink-soft);line-height:1;
+  }
+  .modal .eyebrow{display:block;margin-bottom:10px;}
+  .modal h3{font-family:'Fraunces',serif;font-size:1.5rem;margin:0 0 6px;font-weight:500;}
+  .modal .modal-meta{font-family:'Space Mono',monospace;font-size:.76rem;color:var(--ink-soft);margin-bottom:12px;}
+  .modal .modal-story{font-size:.92rem;color:var(--ink-soft);line-height:1.6;margin-bottom:22px;}
+  .modal-img{width:100%;aspect-ratio:4/3;object-fit:cover;margin-bottom:20px;}
+  .modal-channels{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+  .modal-channels a{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:15px 18px;border:1px solid var(--line);
+    font-size:.92rem;transition:border-color .2s, background .2s;
+  }
+  .modal-channels a:hover{border-color:var(--gold);background:var(--paper-deep);}
+  .modal-divider{
+    display:flex;align-items:center;gap:12px;margin:22px 0;
+    font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
+  }
+  .modal-divider::before,.modal-divider::after{content:"";flex:1;height:1px;background:var(--line);}
+  .fav-list-item{
+    display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .fav-list-item img{width:56px;height:56px;object-fit:cover;flex-shrink:0;}
+  .fav-list-item .info{flex:1;}
+  .fav-list-item .info .t{font-family:'Fraunces',serif;font-size:.98rem;}
+  .fav-list-item .info .m{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--ink-soft);}
+  .fav-list-item button{background:none;border:none;color:var(--brick);cursor:pointer;font-size:.78rem;font-family:'Space Mono',monospace;}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  ::selection{background:var(--gold);color:var(--wall);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="navrow">
+    <a href="#home" class="logo">Asaj Perera<em>.</em></a>
+    <nav class="links">
+      <a href="#gallery">Gallery</a>
+      <a href="#about">About</a>
+      <a href="#credentials">Credentials</a>
+      <a href="#contact">Contact</a>
+      <button class="fav-nav-btn" id="favNavBtn">♡ Favorites <span class="fav-count" id="favCount">0</span></button>
+      <a href="#contact" class="btn-gold">Inquire</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+    <a href="#credentials">Credentials</a>
+    <a href="#contact">Contact</a>
+    <button id="favNavBtnMobile">♡ Favorites (<span id="favCountMobile">0</span>)</button>
+    <a href="#contact" class="btn-gold">Inquire</a>
+  </div>
+</header>
+
+<section class="hero" id="home" style="padding:0;">
+  <img class="hero-img" id="heroImg" src="https://images.unsplash.com/photo-1752649937266-1900d9e176c3?auto=format&fit=crop&w=1800&q=80" alt="Asaj Perera painting in his studio">
+  <div class="hero-inner">
+    <span class="eyebrow">Original Paintings · Jaela, Sri Lanka</span>
+    <h1>Every canvas is <em>one of one.</em></h1>
+    <p class="lede">Framed originals, painted by hand by Asaj Perera — no prints, no copies. Browse the gallery, fall for a piece, and reach out directly to make it yours.</p>
+    <div class="hero-ctas">
+      <a href="#gallery" class="btn-gold">View the Gallery</a>
+      <a href="#contact" class="btn-outline">Inquire About a Piece</a>
+    </div>
+    <form class="hero-search" id="heroSearchForm">
+      <input type="text" id="heroSearchInput" placeholder="Search paintings, e.g. 'coastal' or 'oil'...">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>✦ Framed Originals — No Prints</span>
+      <span>✦ Exhibited Internationally Since 2011</span>
+      <span>✦ Ships From Sri Lanka Worldwide</span>
+      <span>✦ Every Piece Signed by Hand</span>
+      <span>✦ Framed Originals — No Prints</span>
+      <span>✦ Exhibited Internationally Since 2011</span>
+      <span>✦ Ships From Sri Lanka Worldwide</span>
+      <span>✦ Every Piece Signed by Hand</span>
+    </div>
+  </div>
+</section>
+
+<section class="strip-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Featured</span>
+      <h2>Currently <em>on the wall.</em></h2>
+    </div>
+    <div class="strip-grid" id="featuredGrid"><div class="strip-empty">Loading featured works…</div></div>
+  </div>
+</section>
+
+<section class="strip-section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Just Added</span>
+      <h2>Fresh off the <em>easel.</em></h2>
+    </div>
+    <div class="strip-grid" id="newGrid"><div class="strip-empty">Loading new arrivals…</div></div>
+  </div>
+</section>
+
+<section class="strip-section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Gallery Highlights</span>
+      <h2>Moments from the <em>studio &amp; shows.</em></h2>
+    </div>
+    <div class="strip-grid" id="galleryHighlightsGrid"><div class="strip-empty">Loading…</div></div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap grid">
+    <div class="story-photo reveal">
+      <img id="artistImg" src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=700&q=80" alt="Asaj Perera">
+      <div class="frame"></div>
+      <div class="story-stats">
+        <div><div class="num">15</div><div class="lbl">Years Exhibiting</div></div>
+        <div><div class="num">10</div><div class="lbl">Years at Kala Pola</div></div>
+        <div><div class="num">7</div><div class="lbl">Countries Collected</div></div>
+      </div>
+    </div>
+    <div class="story-copy reveal">
+      <span class="eyebrow">The Artist</span>
+      <h2>Painted slowly, by hand, in <em>one studio</em> in Jaela.</h2>
+      <p>I've never made a piece I could make twice. Every canvas that leaves my studio is the only one of its kind — mixed, layered, and finished by hand, start to finish.</p>
+      <p>This gallery holds what's currently on the easel and what's already found a wall to call home. If something stops you, don't overthink it — just reach out. I'll tell you the story behind it myself.</p>
+      <p class="signature">— Asaj Perera</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="gallery-head">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="eyebrow">The Gallery</span>
+        <h2>Find the piece that <em>stops you.</em></h2>
+      </div>
+      <div class="filters" id="categoryFilters">
+        <button class="filter-btn active" data-filter="all">All Work</button>
+      </div>
+    </div>
+
+    <div class="gallery-toolbar">
+      <input type="text" id="gallerySearch" placeholder="Search by title, category, or medium...">
+      <select id="mediumFilter"><option value="all">All Mediums</option></select>
+      <select id="availabilityFilter">
+        <option value="all">All Availability</option>
+        <option value="available">Available</option>
+        <option value="reserved">Reserved</option>
+        <option value="sold">Sold</option>
+      </select>
+      <select id="sortSelect">
+        <option value="newest">Newest First</option>
+        <option value="title-asc">Title A–Z</option>
+        <option value="title-desc">Title Z–A</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"><div class="gallery-empty">Loading gallery…</div></div>
+
+    <div class="gallery-more">
+      <span class="eyebrow">More pieces added monthly — check back often</span>
+    </div>
+  </div>
+</section>
+
+<section class="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How It Works</span>
+      <h2>The website shows the art. <em>You still make the sale.</em></h2>
+      <p>No checkout, no shopping cart. Just a simple path from "I love this" to a piece on your wall.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step">
+        <span class="step-no">01</span>
+        <h3>Browse &amp; Fall For One</h3>
+        <p>Every painting shows its size, medium, price, and the story behind it — so you know exactly what you're looking at.</p>
+      </div>
+      <div class="process-step">
+        <span class="step-no">02</span>
+        <h3>Tap Inquire</h3>
+        <p>A window opens with WhatsApp or Messenger, pre-filled with the painting's name — or send a message directly if you prefer.</p>
+      </div>
+      <div class="process-step">
+        <span class="step-no">03</span>
+        <h3>Talk to Asaj</h3>
+        <p>Every inquiry reaches him personally. He'll answer your questions and confirm the piece is still available.</p>
+      </div>
+      <div class="process-step">
+        <span class="step-no">04</span>
+        <h3>Arrange &amp; Receive</h3>
+        <p>Payment and delivery are arranged directly between you — packed and shipped with care, wherever you are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="credentials" id="credentials">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Exhibitions &amp; Collections</span>
+      <h2>Fifteen years of work, now hanging in <em>seven countries.</em></h2>
+      <p>A career built through international exhibitions, private collections, and large-scale commissions for hotels and residences across Sri Lanka.</p>
+    </div>
+
+    <div class="cred-highlight">
+      <span class="eyebrow">Notable Recognition</span>
+      <p>Selected to represent Sri Lanka as one of its leading artists, presenting work to HRH The Prince of Wales at a Commonwealth Heads of Government Summit reception.</p>
+    </div>
+
+    <div class="cred-grid">
+      <div class="cred-col">
+        <h3>Exhibitions</h3>
+        <ul class="cred-list">
+          <li><span class="yr">2011 · Stockholm, Sweden</span>"Best of Sri Lanka"</li>
+          <li><span class="yr">2016 · Mumbai, India</span>"Lankan Art Vista," Art Desh</li>
+          <li><span class="yr">Sri Lanka</span>"The Peace in Sri Lanka," group exhibition at Park Street Mews</li>
+          <li><span class="yr">10 consecutive years</span>Kala Pola, Colombo's open-air art fair</li>
+        </ul>
+      </div>
+      <div class="cred-col">
+        <h3>Private Collections</h3>
+        <ul class="cred-list">
+          <li><span class="yr">Sri Lanka</span>Former Turkish High Commissioner to Sri Lanka</li>
+          <li><span class="yr">England</span>Dr. Chris Nonis, former Sri Lankan High Commissioner to the UK</li>
+          <li><span class="yr">Sri Lanka</span>Former Australian High Commissioner to Sri Lanka</li>
+          <li><span class="yr">UAE</span>Legacy Art, Dubai</li>
+        </ul>
+      </div>
+      <div class="cred-col">
+        <h3>Commissioned Projects</h3>
+        <ul class="cred-list">
+          <li><span class="yr">Negombo</span>Aria Lagoon Resort</li>
+          <li><span class="yr">Colombo</span>IWS Holdings Villa</li>
+          <li><span class="yr">Colombo</span>Cinnamon Life Apartments (Suites)</li>
+          <li><span class="yr">Colombo</span>The Grand Apartments</li>
+          <li><span class="yr">Anuradhapura</span>Rajarata Hotel</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap grid">
+    <div class="about-copy reveal">
+      <span class="eyebrow">About Asaj</span>
+      <p class="drop">I paint the moments that <em>hold still</em> in memory — a certain light, a certain quiet.</p>
+      <p>I was born in Jaela, Sri Lanka, in 1981, and studied at the University of Colombo. Before painting became my full-time work, I spent five years in marketing and sales within the advertising industry — a career that taught me how to look at things closely, even if it wasn't where I belonged.</p>
+      <p>I've been exhibiting since 2011, from a group show in Stockholm to "Lankan Art Vista" in Mumbai, and I've shown at Kala Pola, Colombo's open-air art fair, for ten consecutive years. My work has gone on to hotel and residential commissions across Negombo, Colombo, and Anuradhapura, in collaboration with architects including Gayan Herath and Mevan Ranasinghe.</p>
+      <p>My paintings move between the coast, the hill country, and quieter interior scenes — always in oil or acrylic, always on canvas, always finished with a frame before they leave my hands. I don't reproduce a painting once it's sold. If you own one of my pieces, you own the only one.</p>
+      <p>Most buyers find a piece here, message me directly, and we take it from there — the way I've always preferred to sell.</p>
+    </div>
+    <div class="about-facts reveal">
+      <div class="row"><span>Based In</span><span>Jaela, Sri Lanka</span></div>
+      <div class="row"><span>Education</span><span>University of Colombo</span></div>
+      <div class="row"><span>Mediums</span><span>Oil &amp; Acrylic on Canvas</span></div>
+      <div class="row"><span>Editions</span><span>Originals Only — No Prints</span></div>
+      <div class="row"><span>Exhibiting Since</span><span>2011</span></div>
+      <div class="row"><span>Recognition</span><span>Presented Before HRH The Prince of Wales</span></div>
+      <div class="row"><span>Shipping</span><span>Sri Lanka &amp; International</span></div>
+      <div class="row"><span>Pricing</span><span>Shown in LKR · USD on Request</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap grid">
+    <div class="reveal">
+      <span class="eyebrow">Get In Touch</span>
+      <h2 class="serif" style="font-size:clamp(1.9rem,3.4vw,2.6rem);font-weight:450;margin:14px 0 20px;">Ask about a piece, or just <em style="font-style:italic;color:var(--gold);">say hello.</em></h2>
+      <p style="color:var(--ink-soft);line-height:1.75;margin-bottom:32px;">However you reach out, it lands with Asaj directly — no sales team, no bots in between.</p>
+      <div class="contact-channels">
+        <a class="channel" href="https://wa.me/94770000000" target="_blank" rel="noopener" id="contactWhatsapp">
+          <div><div class="cname">WhatsApp</div><div class="csub">Usually replies within a few hours</div></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="channel" href="https://m.me/asajperera.art" target="_blank" rel="noopener">
+          <div><div class="cname">Messenger</div><div class="csub">@asajperera.art</div></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <p style="font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:24px;">
+        Placeholder contact details — swap in your real WhatsApp number and Messenger handle before launch (see CONTACT config in this file).
+      </p>
+    </div>
+    <div class="reveal">
+      <form class="inquiry-form" id="contactForm">
+        <div>
+          <label for="cname">Name</label>
+          <input id="cname" type="text" placeholder="Your full name" required>
+        </div>
+        <div>
+          <label for="cemail">Email</label>
+          <input id="cemail" type="email" placeholder="you@email.com" required>
+        </div>
+        <div>
+          <label for="cmobile">Mobile Number</label>
+          <input id="cmobile" type="tel" placeholder="+94 7XX XXX XXX">
+        </div>
+        <div>
+          <label for="cpainting">Painting (optional)</label>
+          <input id="cpainting" type="text" placeholder="e.g. Monsoon Over Galle">
+        </div>
+        <div>
+          <label for="cmsg">Message</label>
+          <textarea id="cmsg" placeholder="Tell Asaj what you're looking for..." required></textarea>
+        </div>
+        <button type="submit" class="btn-gold" style="margin-top:6px;justify-content:center;">Send Inquiry</button>
+        <div class="form-note" id="contactFormNote"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#home" class="logo">Asaj Perera<em>.</em></a>
+        <p class="tag">Original paintings, framed and one of a kind — painted by hand in Jaela, Sri Lanka.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <div class="flist">
+          <a href="#gallery">Gallery</a>
+          <a href="#about">About</a>
+          <a href="#credentials">Credentials</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div>
+        <h4>Reach Asaj</h4>
+        <div class="flist">
+          <a href="https://wa.me/94770000000" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="https://m.me/asajperera.art" target="_blank" rel="noopener">Messenger</a>
+          <a href="#contact">Message Form</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Asaj Perera. All paintings are original works.</span>
+      <span>Connected live to the admin dashboard via Firebase</span>
+    </div>
+  </div>
+</footer>
+
+<button class="fab" id="whatsappFab">
+  <span>💬</span><span class="fab-text">Chat on WhatsApp</span>
+</button>
+
+<!-- Artwork details / inquiry modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal wide">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <span class="eyebrow">Artwork Details</span>
+    <h3 id="modalTitle">Painting Title</h3>
+    <div class="modal-meta" id="modalMeta">Medium · Size · Price</div>
+    <img class="modal-img" id="modalImg" src="" alt="">
+    <div class="modal-story" id="modalStory"></div>
+    <div class="modal-channels">
+      <a id="modalWhatsapp" href="#" target="_blank" rel="noopener">
+        <span>Message on WhatsApp</span><span class="arrow">→</span>
+      </a>
+      <a id="modalMessenger" href="#" target="_blank" rel="noopener">
+        <span>Message on Messenger</span><span class="arrow">→</span>
+      </a>
+    </div>
+    <div class="modal-divider">or send directly</div>
+    <form class="inquiry-form" id="modalForm">
+      <div>
+        <label for="mname">Name</label>
+        <input id="mname" type="text" placeholder="Your full name" required>
+      </div>
+      <div>
+        <label for="memail">Email</label>
+        <input id="memail" type="email" placeholder="you@email.com" required>
+      </div>
+      <div>
+        <label for="mmobile">Mobile Number</label>
+        <input id="mmobile" type="tel" placeholder="+94 7XX XXX XXX">
+      </div>
+      <div>
+        <label for="mmsg">Message</label>
+        <textarea id="mmsg" placeholder="Ask about this piece..." required></textarea>
+      </div>
+      <button type="submit" class="btn-gold" style="margin-top:4px;justify-content:center;">Send Inquiry</button>
+      <div class="form-note" id="modalFormNote"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Favorites list modal -->
+<div class="modal-overlay" id="favOverlay">
+  <div class="modal">
+    <button class="modal-close" id="favClose" aria-label="Close">×</button>
+    <span class="eyebrow">Your Favorites</span>
+    <h3>Saved to your Wishlist</h3>
+    <div class="modal-meta" style="margin-bottom:20px;">Saved on this device only</div>
+    <div id="favListBody"></div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   FIREBASE CONFIG
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDU36D8k1upgv-DMNW_t97NwpNec8Cyq1s",
+  authDomain: "painting-866d6.firebaseapp.com",
+  projectId: "painting-866d6",
+  storageBucket: "painting-866d6.firebasestorage.app",
+  messagingSenderId: "70707197005",
+  appId: "1:70707197005:web:d30406650a2ddb68511804",
+  measurementId: "G-ELZQ5J7GX9"
+};
+
+/* WhatsApp / Messenger contact details — update these to go live */
+const CONTACT = {
+  whatsappNumber: "94770000000", // digits only, country code, no +
+  messengerHandle: "asajperera.art"
+};
+
+/* Fallback images shown only until the admin uploads real ones from the
+   dashboard's "Site Images" section. No code edits are needed to change
+   the live homepage/artist image — that's done entirely from the admin. */
+const DEFAULT_HERO_IMG = "https://images.unsplash.com/photo-1752649937266-1900d9e176c3?auto=format&fit=crop&w=1800&q=80";
+const DEFAULT_ARTIST_IMG = "https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=700&q=80";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, onSnapshot, addDoc, updateDoc,
+  increment, serverTimestamp, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let artworks = [];
+let categories = [];
+let siteImages = [];
+let currentCategoryFilter = 'all';
+
+const UNIT_ABBR = { feet:'ft', inches:'in', centimetres:'cm', metres:'m' };
+function formatDimension(w,h,unit){
+  const a = UNIT_ABBR[unit] || unit || '';
+  if(!w || !h) return '';
+  return `${w} ${a} × ${h} ${a}`;
+}
+function statusLabel(s){
+  if(s==='available') return 'Available';
+  if(s==='reserved') return 'Reserved';
+  return 'Sold';
+}
+function firstImage(p){
+  const first = (p.images && p.images.length) ? p.images[0] : null;
+  const url = first ? (typeof first === 'string' ? first : first.url) : (p.img || null);
+  return url || 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=700&q=80';
+}
+function millis(ts){ return ts && ts.toMillis ? ts.toMillis() : 0; }
+
+/* ---------- Live data from Firestore ---------- */
+onSnapshot(query(collection(db,'artworks'), orderBy('createdAt','desc')), (snap) => {
+  artworks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  renderFeatured();
+  renderNewArrivals();
+  renderMediumFilterOptions();
+  renderGallery();
+}, (err) => {
+  document.getElementById('galleryGrid').innerHTML =
+    `<div class="gallery-empty">Couldn't load artworks right now. Please refresh, or check back shortly. (${err.code||err.message})</div>`;
+});
+
+onSnapshot(collection(db,'categories'), (snap) => {
+  categories = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  renderCategoryFilters();
+});
+
+onSnapshot(collection(db,'siteImages'), (snap) => {
+  siteImages = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  renderHomepageImage();
+  renderArtistImage();
+  renderGalleryHighlights();
+}, (err) => console.error('siteImages error', err));
+
+/* ---------- Homepage / Artist images, managed entirely from the admin ---------- */
+function latestBySection(section){
+  const list = siteImages.filter(i => i.section === section).sort((a,b) => millis(b.createdAt)-millis(a.createdAt));
+  return list[0] || null;
+}
+function renderHomepageImage(){
+  const img = latestBySection('homepage');
+  document.getElementById('heroImg').src = img ? img.url : DEFAULT_HERO_IMG;
+}
+function renderArtistImage(){
+  const img = latestBySection('artist');
+  document.getElementById('artistImg').src = img ? img.url : DEFAULT_ARTIST_IMG;
+}
+function renderGalleryHighlights(){
+  const el = document.getElementById('galleryHighlightsGrid');
+  const items = siteImages.filter(i => i.featured && i.section !== 'homepage')
+    .sort((a,b) => millis(b.createdAt)-millis(a.createdAt))
+    .slice(0,6);
+  if(!items.length){ el.innerHTML = `<div class="strip-empty">No highlighted images yet.</div>`; return; }
+  el.innerHTML = items.map(i => `<div class="strip-card"><img src="${i.url}" alt="Gallery highlight" loading="lazy"></div>`).join('');
+}
+
+/* ---------- Featured / New Arrivals strips ---------- */
+function stripCardHTML(p){
+  return `<div class="strip-card" data-id="${p.id}">
+    <img src="${firstImage(p)}" alt="${p.title}" loading="lazy">
+    <div class="cap"><div class="t">${p.title||''}</div><div class="m">${p.medium||''} · ${formatDimension(p.width,p.height,p.unit)}</div></div>
+  </div>`;
+}
+function renderFeatured(){
+  const el = document.getElementById('featuredGrid');
+  const items = artworks.filter(p => p.featured);
+  if(!items.length){ el.innerHTML = `<div class="strip-empty">No featured pieces yet — mark artworks as "Featured" in the dashboard.</div>`; return; }
+  el.innerHTML = items.slice(0,3).map(stripCardHTML).join('');
+  el.querySelectorAll('.strip-card').forEach(c => c.addEventListener('click', () => openArtworkModal(c.dataset.id)));
+}
+function renderNewArrivals(){
+  const el = document.getElementById('newGrid');
+  if(!artworks.length){ el.innerHTML = `<div class="strip-empty">No artworks published yet — add one in the dashboard.</div>`; return; }
+  el.innerHTML = artworks.slice(0,3).map(stripCardHTML).join('');
+  el.querySelectorAll('.strip-card').forEach(c => c.addEventListener('click', () => openArtworkModal(c.dataset.id)));
+}
+
+/* ---------- Category filter buttons ---------- */
+function renderCategoryFilters(){
+  const el = document.getElementById('categoryFilters');
+  el.innerHTML = `<button class="filter-btn ${currentCategoryFilter==='all'?'active':''}" data-filter="all">All Work</button>` +
+    categories.map(c => `<button class="filter-btn ${currentCategoryFilter===c.name?'active':''}" data-filter="${c.name}">${c.name}</button>`).join('');
+  el.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', () => {
+    currentCategoryFilter = b.dataset.filter;
+    el.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderGallery();
+  }));
+}
+
+/* ---------- Medium filter dropdown (built from live data) ---------- */
+function renderMediumFilterOptions(){
+  const sel = document.getElementById('mediumFilter');
+  const current = sel.value;
+  const mediums = [...new Set(artworks.map(p=>p.medium).filter(Boolean))].sort();
+  sel.innerHTML = `<option value="all">All Mediums</option>` + mediums.map(m=>`<option value="${m}">${m}</option>`).join('');
+  if(mediums.includes(current)) sel.value = current;
+}
+
+/* ---------- Favorites (stored on this browser only — no login system) ---------- */
+function getFavorites(){ try{ return JSON.parse(localStorage.getItem('ap_favorites')||'[]'); }catch(e){ return []; } }
+function saveFavorites(arr){ localStorage.setItem('ap_favorites', JSON.stringify(arr)); }
+function isFavorited(id){ return getFavorites().includes(id); }
+function updateFavCount(){
+  const n = getFavorites().length;
+  document.getElementById('favCount').textContent = n;
+  document.getElementById('favCountMobile').textContent = n;
+}
+async function toggleFavorite(id){
+  let favs = getFavorites();
+  const ref = doc(db,'artworks',id);
+  if(favs.includes(id)){
+    favs = favs.filter(x=>x!==id);
+    try{ await updateDoc(ref, { favoritesCount: increment(-1) }); }catch(e){}
+  } else {
+    favs.push(id);
+    try{
+      await updateDoc(ref, { favoritesCount: increment(1) });
+      await addDoc(collection(db,'favoritesLog'), { artworkId:id, createdAt: serverTimestamp() });
+    }catch(e){}
+  }
+  saveFavorites(favs);
+  updateFavCount();
+  renderGallery();
+}
+updateFavCount();
+
+/* ---------- Gallery grid: search, filters, sort ---------- */
+function getGalleryQueryState(){
+  return {
+    search: (document.getElementById('gallerySearch').value||'').toLowerCase().trim(),
+    medium: document.getElementById('mediumFilter').value,
+    availability: document.getElementById('availabilityFilter').value,
+    sort: document.getElementById('sortSelect').value
+  };
+}
+function renderGallery(){
+  const grid = document.getElementById('galleryGrid');
+  const { search, medium, availability, sort } = getGalleryQueryState();
+
+  let list = artworks.filter(p => {
+    if(currentCategoryFilter!=='all' && p.category!==currentCategoryFilter) return false;
+    if(medium!=='all' && p.medium!==medium) return false;
+    if(availability!=='all' && p.status!==availability) return false;
+    if(search){
+      const hay = `${p.title||''} ${p.category||''} ${p.medium||''} ${p.description||''}`.toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  list.sort((a,b) => {
+    if(sort==='title-asc') return (a.title||'').localeCompare(b.title||'');
+    if(sort==='title-desc') return (b.title||'').localeCompare(a.title||'');
+    if(sort==='price-asc') return (parseFloat(a.price)||0) - (parseFloat(b.price)||0);
+    if(sort==='price-desc') return (parseFloat(b.price)||0) - (parseFloat(a.price)||0);
+    return 0; // newest already applied via query order
+  });
+
+  if(!list.length){
+    grid.innerHTML = `<div class="gallery-empty">No artworks match your search/filters yet.</div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(p => {
+    const disabled = p.status === 'sold' ? 'disabled' : '';
+    const fav = isFavorited(p.id);
+    return `
+    <div class="card reveal" data-id="${p.id}">
+      <div class="card-frame">
+        <span class="status-badge ${p.status}">${statusLabel(p.status)}</span>
+        <button class="fav-toggle ${fav?'active':''}" data-fav="${p.id}" aria-label="Toggle favorite">${fav?'♥':'♡'}</button>
+        <img src="${firstImage(p)}" alt="${p.title||''}, ${p.medium||''}, ${formatDimension(p.width,p.height,p.unit)}" loading="lazy">
+      </div>
+      <div class="plaque">
+        <div class="ttl">${p.title||'Untitled'}</div>
+        <div class="meta">${p.medium||''} · ${formatDimension(p.width,p.height,p.unit)}</div>
+        <div class="story-line">${(p.description||'').slice(0,110)}</div>
+        <div class="bottom-row">
+          <div class="price">${p.status==='sold' && p.price ? '<span class="strike">'+p.price+'</span>Sold' : (p.price||'Price on request')}</div>
+          <button class="inquire-link" ${disabled} data-view="${p.id}">${p.status==='sold' ? 'Unavailable' : 'View Details →'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(b.dataset.fav); }));
+  grid.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => openArtworkModal(b.dataset.view)));
+  observeReveals();
+}
+
+document.getElementById('gallerySearch').addEventListener('input', renderGallery);
+document.getElementById('mediumFilter').addEventListener('change', renderGallery);
+document.getElementById('availabilityFilter').addEventListener('change', renderGallery);
+document.getElementById('sortSelect').addEventListener('change', renderGallery);
+document.getElementById('heroSearchForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  document.getElementById('gallerySearch').value = document.getElementById('heroSearchInput').value;
+  document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
+  renderGallery();
+});
+
+/* ---------- Artwork details modal (also serves as "View Details" page + inquiry) ---------- */
+const overlay = document.getElementById('modalOverlay');
+let currentArtwork = null;
+
+async function openArtworkModal(id){
+  const p = artworks.find(x => x.id === id);
+  if(!p) return;
+  currentArtwork = p;
+  document.getElementById('modalTitle').textContent = p.title || 'Untitled';
+  document.getElementById('modalMeta').textContent = `${p.medium||''} · ${formatDimension(p.width,p.height,p.unit)} · ${p.price||'Price on request'}`;
+  document.getElementById('modalImg').src = firstImage(p);
+  document.getElementById('modalStory').textContent = p.description || '';
+  const msg = encodeURIComponent(`Hi Asaj! I'm interested in "${p.title}" (${formatDimension(p.width,p.height,p.unit)}, ${p.price||''}). Is it still available?`);
+  const waLink = `https://wa.me/${CONTACT.whatsappNumber}?text=${msg}`;
+  document.getElementById('modalWhatsapp').href = waLink;
+  document.getElementById('modalWhatsapp').onclick = () => trackWhatsappClick(p.id);
+  document.getElementById('modalMessenger').href = `https://m.me/${CONTACT.messengerHandle}`;
+  document.getElementById('modalFormNote').className = 'form-note';
+  document.getElementById('modalForm').reset();
+  overlay.classList.add('open');
+  trackView(p.id);
+}
+document.getElementById('modalClose').addEventListener('click', () => overlay.classList.remove('open'));
+overlay.addEventListener('click', (e) => { if(e.target === overlay) overlay.classList.remove('open'); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape'){ overlay.classList.remove('open'); document.getElementById('favOverlay').classList.remove('open'); }});
+
+async function trackView(id){ try{ await updateDoc(doc(db,'artworks',id), { views: increment(1) }); }catch(e){} }
+async function trackWhatsappClick(id){ try{ await updateDoc(doc(db,'artworks',id), { whatsappClicks: increment(1) }); }catch(e){} }
+
+/* ---------- Inquiry submission (writes straight into the dashboard) ---------- */
+async function submitInquiry({name,email,mobile,message,artwork}){
+  await addDoc(collection(db,'inquiries'), {
+    name, email, mobile: mobile||'', message,
+    artworkId: artwork ? artwork.id : null,
+    artworkTitle: artwork ? artwork.title : null,
+    artworkImage: artwork ? firstImage(artwork) : null,
+    status: 'new',
+    createdAt: serverTimestamp()
+  });
+}
+
+document.getElementById('modalForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const note = document.getElementById('modalFormNote');
+  try{
+    await submitInquiry({
+      name: document.getElementById('mname').value,
+      email: document.getElementById('memail').value,
+      mobile: document.getElementById('mmobile').value,
+      message: document.getElementById('mmsg').value,
+      artwork: currentArtwork
+    });
+    note.textContent = "Thank you — your inquiry has been sent to Asaj.";
+    note.className = 'form-note show ok';
+    document.getElementById('modalForm').reset();
+  }catch(err){
+    note.textContent = "Couldn't send — check your connection and try again.";
+    note.className = 'form-note show err';
+  }
+});
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const note = document.getElementById('contactFormNote');
+  const paintingTitle = document.getElementById('cpainting').value.trim();
+  const matched = paintingTitle ? artworks.find(a => (a.title||'').toLowerCase() === paintingTitle.toLowerCase()) : null;
+  try{
+    await submitInquiry({
+      name: document.getElementById('cname').value,
+      email: document.getElementById('cemail').value,
+      mobile: document.getElementById('cmobile').value,
+      message: document.getElementById('cmsg').value + (paintingTitle && !matched ? `\n\n(Mentioned painting: ${paintingTitle})` : ''),
+      artwork: matched
+    });
+    note.textContent = "Thank you — your inquiry has been sent to Asaj.";
+    note.className = 'form-note show ok';
+    document.getElementById('contactForm').reset();
+  }catch(err){
+    note.textContent = "Couldn't send — check your connection and try again.";
+    note.className = 'form-note show err';
+  }
+});
+
+/* ---------- Favorites list modal ---------- */
+const favOverlay = document.getElementById('favOverlay');
+function openFavList(){
+  const ids = getFavorites();
+  const body = document.getElementById('favListBody');
+  const items = artworks.filter(a => ids.includes(a.id));
+  if(!items.length){
+    body.innerHTML = `<p style="color:var(--ink-soft);font-size:.9rem;">You haven't saved any paintings yet. Tap the ♡ on any artwork to save it here.</p>`;
+  } else {
+    body.innerHTML = items.map(p => `
+      <div class="fav-list-item">
+        <img src="${firstImage(p)}" alt="${p.title}">
+        <div class="info"><div class="t">${p.title}</div><div class="m">${p.medium||''} · ${formatDimension(p.width,p.height,p.unit)}</div></div>
+        <button data-remove="${p.id}">Remove</button>
+      </div>`).join('');
+    body.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', async () => {
+      await toggleFavorite(b.dataset.remove);
+      openFavList();
+    }));
+  }
+  favOverlay.classList.add('open');
+}
+document.getElementById('favNavBtn').addEventListener('click', openFavList);
+document.getElementById('favNavBtnMobile').addEventListener('click', openFavList);
+document.getElementById('favClose').addEventListener('click', () => favOverlay.classList.remove('open'));
+favOverlay.addEventListener('click', (e) => { if(e.target === favOverlay) favOverlay.classList.remove('open'); });
+
+/* ---------- WhatsApp FAB ---------- */
+document.getElementById('whatsappFab').addEventListener('click', () => {
+  window.open(`https://wa.me/${CONTACT.whatsappNumber}`, '_blank');
+});
+document.getElementById('contactWhatsapp').addEventListener('click', () => {
+  document.getElementById('contactWhatsapp').href = `https://wa.me/${CONTACT.whatsappNumber}`;
+});
+
+/* ---------- Mobile menu ---------- */
+const menuToggle = document.getElementById('menuToggle');
+const mobilePanel = document.getElementById('mobilePanel');
+menuToggle.addEventListener('click', () => mobilePanel.classList.toggle('open'));
+mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobilePanel.classList.remove('open')));
+
+/* ---------- Scroll reveal ---------- */
+function observeReveals(){
+  const els = document.querySelectorAll('.reveal:not(.in)');
+  if(!('IntersectionObserver' in window)){ els.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+    });
+  }, {threshold:0.12});
+  els.forEach(el => io.observe(el));
+}
+observeReveals();
+</script>
+</body>
+</html>
