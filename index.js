@@ -1,89 +1,92 @@
-/**
- * Minimal backend for Asaj Perera Gallery.
- *
- * Purpose: keep the Cloudinary API secret off the browser entirely.
- * The admin dashboard (admin.html) calls this server to get a
- * short-lived, signed upload request, then uploads the actual file
- * straight to Cloudinary from the browser using that signature.
- * The secret itself never leaves this server.
- *
- * Every route requires a valid Firebase ID token AND that the
- * signed-in user's uid has a document in the Firestore `admins`
- * collection — so only your admin account can upload or delete images.
- *
- * Setup:
- *   1. cd server && npm install
- *   2. Copy .env.example to .env and fill in:
- *      - CLOUDINARY_API_SECRET (from your Cloudinary dashboard)
- *      - GOOGLE_APPLICATION_CREDENTIALS (path to a Firebase service
- *        account JSON key — Firebase Console → Project Settings →
- *        Service Accounts → Generate new private key)
- *   3. npm start
- *   4. Deploy this folder somewhere reachable over HTTPS (Render,
- *      Railway, Fly.io, a Firebase Cloud Function, your own VPS, etc.)
- *   5. In admin.html, set BACKEND_URL to that deployed URL.
- *
- * Visit /health once deployed to confirm it's actually running, and
- * /diagnostics to confirm Cloudinary + Firebase both initialized
- * correctly — this catches most "why won't uploads work" issues
- * before you even open the admin dashboard.
- */
-
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { v2 as cloudinary } from 'cloudinary';
 import admin from 'firebase-admin';
 
-// .trim() everywhere below — a stray trailing space or newline copied from
-// a dashboard/env-var UI is the #1 cause of "it just doesn't work" bugs.
+// Helper to read envs safely
 function env(name, fallback) {
   const v = process.env[name];
   return (v === undefined || v === null || v === '') ? fallback : String(v).trim();
 }
 
+/* -------------------------
+   Cloudinary config (may be absent)
+   ------------------------- */
 const CLOUDINARY_CLOUD_NAME = env('CLOUDINARY_CLOUD_NAME', 'xlpzooiq');
 const CLOUDINARY_API_KEY = env('CLOUDINARY_API_KEY', '759951758839177');
 const CLOUDINARY_API_SECRET = env('CLOUDINARY_API_SECRET', undefined);
 
-if (!CLOUDINARY_API_SECRET) {
-  console.error('[startup] Missing CLOUDINARY_API_SECRET environment variable. Set it in your .env file (see .env.example) or in your host\'s environment variable settings.');
-  process.exit(1);
+let cloudinaryConfigured = false;
+if (CLOUDINARY_API_SECRET) {
+  cloudinary.config({
+    cloud_name: CLOUDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET
+  });
+  cloudinaryConfigured = true;
+  console.log(`[startup] Cloudinary configured for cloud_name="${CLOUDINARY_CLOUD_NAME}", api_key_present=${Boolean(CLOUDINARY_API_KEY)}`);
+} else {
+  console.warn('[startup] CLOUDINARY_API_SECRET not provided — Cloudinary signing endpoints will be disabled until you set this env var.');
 }
 
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET
-});
-console.log(`[startup] Cloudinary configured for cloud_name="${CLOUDINARY_CLOUD_NAME}", api_key="${CLOUDINARY_API_KEY}"`);
-
-// Fail loudly and clearly if Firebase Admin can't initialize, instead of
-// letting every request crash later with a confusing stack trace.
+/* -------------------------
+   Firebase Admin init (robust)
+   - Tries GOOGLE_SERVICE_ACCOUNT_JSON (raw or base64)
+   - Falls back to applicationDefault if available
+   ------------------------- */
 let firebaseReady = false;
 let firebaseInitError = null;
 let db = null;
-try {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault()
-  });
-  db = admin.firestore();
-  firebaseReady = true;
-  console.log('[startup] Firebase Admin initialized successfully.');
-} catch (e) {
-  firebaseInitError = e.message;
-  console.error('[startup] Firebase Admin FAILED to initialize:', e.message);
-  console.error('[startup] Check that GOOGLE_APPLICATION_CREDENTIALS points to a valid, readable service account JSON file.');
+
+function tryParseServiceAccountEnv() {
+  const raw = env('GOOGLE_SERVICE_ACCOUNT_JSON', '');
+  if (!raw) return null;
+  try {
+    const trimmed = raw.trim();
+    if (!trimmed.startsWith('{')) {
+      const decoded = Buffer.from(trimmed, 'base64').toString('utf8');
+      return JSON.parse(decoded);
+    }
+    return JSON.parse(trimmed);
+  } catch (e) {
+    console.warn('[startup] GOOGLE_SERVICE_ACCOUNT_JSON provided but could not parse it as JSON.');
+    return null;
+  }
 }
 
+try {
+  const sa = tryParseServiceAccountEnv();
+  if (sa) {
+    admin.initializeApp({ credential: admin.credential.cert(sa) });
+    db = admin.firestore();
+    firebaseReady = true;
+    console.log('[startup] Firebase Admin initialized using GOOGLE_SERVICE_ACCOUNT_JSON.');
+  } else {
+    try {
+      admin.initializeApp({ credential: admin.credential.applicationDefault() });
+      db = admin.firestore();
+      firebaseReady = true;
+      console.log('[startup] Firebase Admin initialized using Application Default Credentials.');
+    } catch (e2) {
+      firebaseInitError = e2.message || String(e2);
+      firebaseReady = false;
+      console.warn('[startup] Firebase Admin NOT initialized:', firebaseInitError);
+    }
+  }
+} catch (e) {
+  firebaseInitError = e.message || String(e);
+  firebaseReady = false;
+  console.warn('[startup] Firebase Admin initialization failed:', firebaseInitError);
+}
+
+/* -------------------------
+   Express app
+   ------------------------- */
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Every route below is wrapped so failures always come back as JSON with
-// a real message, never Express's default HTML error page — an HTML
-// error page silently breaks the frontend's `.json()` parsing and shows
-// up there as a vague, unhelpful failure.
 function asyncRoute(fn) {
   return (req, res) => {
     Promise.resolve(fn(req, res)).catch((e) => {
@@ -96,7 +99,7 @@ function asyncRoute(fn) {
 async function requireAdmin(req, res, next) {
   try {
     if (!firebaseReady) {
-      return res.status(500).json({ error: `Firebase Admin is not initialized: ${firebaseInitError}` });
+      return res.status(500).json({ error: `Firebase Admin is not initialized: ${firebaseInitError || 'unknown'}` });
     }
     const authHeader = req.headers.authorization || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -111,38 +114,54 @@ async function requireAdmin(req, res, next) {
     req.uid = decoded.uid;
     next();
   } catch (e) {
-    console.error('[auth] Token verification failed:', e.message);
-    res.status(401).json({ error: `Invalid or expired token: ${e.message}` });
+    console.error('[auth] Token verification failed:', e && e.message ? e.message : e);
+    return res.status(401).json({ error: `Invalid or expired token: ${e && e.message ? e.message : String(e)}` });
   }
 }
 
-// Quick "is it even running" check.
-app.get('/health', (req, res) => res.json({ ok: true }));
+/* -------------------------
+   Health & diagnostics
+   ------------------------- */
+app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
-// Deeper check: confirms Cloudinary config and Firebase Admin both
-// actually initialized, without requiring you to be logged in. Visit
-// this in a browser right after deploying to catch config problems early.
 app.get('/diagnostics', (req, res) => {
   res.json({
     cloudinary: {
-      cloudName: CLOUDINARY_CLOUD_NAME,
+      cloudName: CLOUDINARY_CLOUD_NAME || null,
       apiKeyPresent: Boolean(CLOUDINARY_API_KEY),
       apiSecretPresent: Boolean(CLOUDINARY_API_SECRET),
-      apiSecretLength: CLOUDINARY_API_SECRET ? CLOUDINARY_API_SECRET.length : 0
+      configured: cloudinaryConfigured
     },
     firebase: {
       ready: firebaseReady,
       error: firebaseInitError
+    },
+    node: {
+      version: process.version,
+      env: process.env.NODE_ENV || 'development'
     }
   });
 });
 
 app.get('/', (req, res) => {
-  res.json({ ok: true, service: 'asaj-perera-image-backend', endpoints: ['/health', '/diagnostics', 'POST /api/cloudinary-signature', 'POST /api/cloudinary-delete'] });
+  res.json({
+    ok: true,
+    service: 'asaj-perera-image-backend',
+    cloudinaryConfigured,
+    firebaseReady,
+    endpoints: ['/health', '/diagnostics', 'POST /api/cloudinary-signature', 'POST /api/cloudinary-delete']
+  });
 });
 
-// Issues signed params for a direct browser -> Cloudinary upload.
+/* -------------------------
+   Cloudinary signing and delete routes
+   If Cloudinary not configured, return 503 to indicate operator action needed.
+   ------------------------- */
 app.post('/api/cloudinary-signature', requireAdmin, asyncRoute(async (req, res) => {
+  if (!cloudinaryConfigured) {
+    return res.status(503).json({ error: 'Cloudinary signing is not configured on this server. Set CLOUDINARY_API_SECRET (and related vars) in your host environment.' });
+  }
+
   const folder = (req.body && req.body.folder) ? String(req.body.folder).slice(0, 100) : 'uploads';
   const timestamp = Math.round(Date.now() / 1000);
   const paramsToSign = { timestamp, folder };
@@ -157,8 +176,11 @@ app.post('/api/cloudinary-signature', requireAdmin, asyncRoute(async (req, res) 
   });
 }));
 
-// Deletes an image from Cloudinary by its public_id.
 app.post('/api/cloudinary-delete', requireAdmin, asyncRoute(async (req, res) => {
+  if (!cloudinaryConfigured) {
+    return res.status(503).json({ error: 'Cloudinary delete is not configured on this server. Set CLOUDINARY_API_SECRET (and related vars) in your host environment.' });
+  }
+
   const { publicId } = req.body || {};
   if (!publicId) return res.status(400).json({ error: 'publicId is required' });
   const result = await cloudinary.uploader.destroy(publicId);
@@ -172,6 +194,6 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Cloudinary signing server running on port ${PORT}`);
+  console.log(`Cloudinary signing server running on port ${PORT} (cloudinaryConfigured=${cloudinaryConfigured}, firebaseReady=${firebaseReady})`);
   console.log(`Try: /health, /diagnostics`);
 });
