@@ -438,6 +438,60 @@
   .reveal.in{opacity:1;transform:translateY(0);}
 
   ::selection{background:var(--gold);color:var(--wall);}
+/* ===== v2 ===== */
+#progress{position:fixed;top:0;left:0;right:0;height:3px;background:var(--gold-bright);transform-origin:0 50%;transform:scaleX(0);z-index:300;pointer-events:none}
+header{transition:transform .4s ease}header.hide{transform:translateY(-100%)}
+nav.links a.on{color:var(--ink)}nav.links a.on::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:var(--gold)}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+.hero-inner>*{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.hero-inner>*:nth-child(2){animation-delay:.12s}.hero-inner>*:nth-child(3){animation-delay:.24s}.hero-inner>*:nth-child(4){animation-delay:.36s}.hero-inner>*:nth-child(5){animation-delay:.48s}
+.gallery-grid .card:nth-child(3n+2){transition-delay:.1s}.gallery-grid .card:nth-child(3n){transition-delay:.2s}
+.card-frame img,.strip-card{cursor:pointer}
+.fav-toggle:active{transform:scale(.85)}
+.fav-toggle.active{animation:pop .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.fav-count.bump{animation:pop .45s}
+.pt{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--gold-bright);pointer-events:none;animation:fly .7s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}
+.rbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:-18px 0 34px}
+.rbar .cnt{font-family:'Space Mono',monospace;font-size:.74rem;color:var(--ink-soft);margin-right:auto}
+.chip{font-family:'Space Mono',monospace;font-size:.7rem;padding:8px 14px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .2s}
+.chip:hover{border-color:var(--ink);color:var(--ink)}.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}.chip[hidden]{display:none}
+/* artwork page */
+#artPage{position:fixed;inset:0;z-index:150;background:var(--paper);overflow-y:auto;visibility:hidden;opacity:0;transform:translateY(28px);transition:opacity .35s,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s .5s}
+#artPage.open{visibility:visible;opacity:1;transform:none;transition-delay:0s}
+body.lock{overflow:hidden}
+.ap-top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:14px 32px;background:rgba(251,247,239,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.ap-btn{background:none;border:none;font-family:'Space Mono',monospace;font-size:.74rem;letter-spacing:.05em;color:var(--ink);cursor:pointer;padding:6px 0}.ap-btn:hover{color:var(--gold)}
+.ap-body{max-width:1200px;margin:0 auto;padding:40px 32px 90px;display:grid;grid-template-columns:1.1fr .9fr;gap:64px}
+.ap-stage{background:var(--wall);padding:36px;position:sticky;top:90px;align-self:start;animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.ap-main{position:relative;overflow:hidden;aspect-ratio:4/5;cursor:zoom-in;box-shadow:0 30px 50px -18px rgba(0,0,0,.7)}
+.ap-main img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,opacity .3s}
+.ap-main.zoom{cursor:zoom-out}.ap-main.zoom img{transform:scale(2.2)}
+.ap-thumbs{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.ap-thumbs img{width:60px;height:75px;object-fit:cover;opacity:.45;cursor:pointer;transition:opacity .2s,transform .2s;border:1px solid transparent}
+.ap-thumbs img:hover{transform:translateY(-3px)}.ap-thumbs img.on{opacity:1;border-color:var(--gold-bright)}
+#artPage.open .ap-info>*{animation:rise .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*.07s + .15s)}
+.ap-info h1{font-family:'Fraunces',serif;font-weight:450;font-size:clamp(2rem,4vw,3rem);line-height:1.08;margin:10px 0 16px}
+.ap-desc{color:var(--ink-soft);line-height:1.8;margin:22px 0 26px;white-space:pre-line}
+.ap-cta{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0}
+.ap-cta a,.ap-cta button{justify-content:center}
+.ap-fav.active{color:var(--brick);border-color:var(--brick)}
+.ap-pn{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}
+.ap-pn button{background:none;border:none;font-family:'Space Mono',monospace;font-size:.74rem;cursor:pointer;color:var(--ink-soft)}.ap-pn button:hover{color:var(--gold)}
+.ap-rel{grid-column:1/-1;margin-top:20px}.ap-rel h3{font-family:'Fraunces',serif;font-weight:450;font-size:1.5rem;margin:0 0 22px}
+@media(max-width:860px){.ap-body{grid-template-columns:1fr;gap:30px;padding:22px 20px 80px}.ap-top{padding:12px 20px}.ap-stage{position:static;padding:20px}}
+/* favourites drawer */
+#favOverlay{align-items:stretch;justify-content:flex-end;padding:0}
+#favOverlay .modal{max-width:440px;max-height:none;height:100%;animation:slideIn .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes slideIn{from{transform:translateX(100%)}}
+.fav-total{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:.72rem;color:var(--ink-soft)}
+.fav-total b{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--gold);font-weight:500}
+.fav-actions{display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap}
+.fav-list-item{cursor:pointer;transition:background .2s;animation:rise .5s both}.fav-list-item:hover{background:var(--paper-deep)}
+.fav-empty{text-align:center;padding:50px 10px;color:var(--ink-soft)}.fav-empty .big{font-size:3rem;color:var(--gold);animation:pop .8s both}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
 </style>
 </head>
 <body>
@@ -1011,7 +1065,7 @@ function updateFavCount(){
   document.getElementById('favCount').textContent = n;
   document.getElementById('favCountMobile').textContent = n;
 }
-async function toggleFavorite(id){
+async function _toggleFavOld(id){
   let favs = getFavorites();
   if(favs.includes(id)){
     favs = favs.filter(x=>x!==id);
@@ -1033,17 +1087,18 @@ function getGalleryQueryState(){
     sort: document.getElementById('sortSelect').value
   };
 }
-function renderGallery(){
+function _renderGalleryBase(){
   const grid = document.getElementById('galleryGrid');
   const { search, medium, availability, sort } = getGalleryQueryState();
 
   let list = artworks.filter(p => {
     if(currentCategoryFilter!=='all' && p.category!==currentCategoryFilter) return false;
+    if(window.__favOnly && !isFavorited(p.id)) return false;
     if(medium!=='all' && p.medium!==medium) return false;
     if(availability!=='all' && p.status!==availability) return false;
     if(search){
       const hay = `${p.title||''} ${p.category||''} ${p.medium||''} ${p.description||''}`.toLowerCase();
-      if(!hay.includes(search)) return false;
+      if(!search.split(/\s+/).every(t=>hay.includes(t))) return false;
     }
     return true;
   });
@@ -1062,7 +1117,7 @@ function renderGallery(){
   }
 
   grid.innerHTML = list.map(p => {
-    const disabled = p.status === 'sold' ? 'disabled' : '';
+    const disabled = '';
     const fav = isFavorited(p.id);
     return `
     <div class="card reveal" data-id="${p.id}">
@@ -1077,7 +1132,7 @@ function renderGallery(){
         <div class="story-line">${(p.description||'').slice(0,110)}</div>
         <div class="bottom-row">
           <div class="price">${p.status==='sold' && p.price ? '<span class="strike">'+p.price+'</span>Sold' : (p.price||'Price on request')}</div>
-          <button class="inquire-link" ${disabled} data-view="${p.id}">${p.status==='sold' ? 'Unavailable' : 'View Details →'}</button>
+          <button class="inquire-link" ${disabled} data-view="${p.id}">${'View Details →'}</button>
         </div>
       </div>
     </div>`;
@@ -1103,7 +1158,8 @@ document.getElementById('heroSearchForm').addEventListener('submit', (e) => {
 const overlay = document.getElementById('modalOverlay');
 let currentArtwork = null;
 
-async function openArtworkModal(id){
+function openArtworkModal(id){ openPage(id); }
+async function openInquiryModal(id){
   const p = artworks.find(x => x.id === id);
   if(!p) return;
   currentArtwork = p;
@@ -1119,7 +1175,6 @@ async function openArtworkModal(id){
   document.getElementById('modalFormNote').className = 'form-note';
   document.getElementById('modalForm').reset();
   overlay.classList.add('open');
-  trackView(p.id);
 }
 document.getElementById('modalClose').addEventListener('click', () => overlay.classList.remove('open'));
 overlay.addEventListener('click', (e) => { if(e.target === overlay) overlay.classList.remove('open'); });
@@ -1184,7 +1239,7 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
 
 /* ---------- Favorites list modal ---------- */
 const favOverlay = document.getElementById('favOverlay');
-function openFavList(){
+function _favOld(){
   const ids = getFavorites();
   const body = document.getElementById('favListBody');
   const items = artworks.filter(a => ids.includes(a.id));
@@ -1235,6 +1290,153 @@ function observeReveals(){
   els.forEach(el => io.observe(el));
 }
 observeReveals();
+/* ============ v2: favourites, artwork pages, finding, navigation ============ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money=p=>parseFloat(String(p||'').replace(/[^0-9.]/g,''))||0;
+const imgs=p=>{const a=(p.images||[]).map(i=>typeof i==='string'?i:i.url).filter(Boolean);return a.length?a:[firstImage(p)];};
+const BASE_TITLE=document.title, ART_URL=()=>location.href.split('#')[0]+'#/art/';
+
+/* ---- Navigation: progress bar, active section, auto-hiding header ---- */
+const bar=document.createElement('div');bar.id='progress';document.body.append(bar);
+let lastY=0;
+addEventListener('scroll',()=>{const h=document.documentElement,y=h.scrollTop;
+  bar.style.transform=`scaleX(${y/Math.max(1,h.scrollHeight-h.clientHeight)})`;
+  $('header').classList.toggle('hide',y>lastY&&y>420&&!mobilePanel.classList.contains('open'));lastY=y;},{passive:true});
+const secIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)$$('nav.links a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}),{rootMargin:'-45% 0px -50% 0px'});
+['gallery','about','credentials','contact'].forEach(id=>secIO.observe(document.getElementById(id)));
+
+/* ---- Favourites ---- */
+function burst(b){for(let i=0;i<8;i++){const s=document.createElement('i');s.className='pt';const a=i/8*6.283;
+  s.style.setProperty('--x',Math.cos(a)*36+'px');s.style.setProperty('--y',Math.sin(a)*36+'px');b.append(s);setTimeout(()=>s.remove(),700);}}
+async function toggleFavorite(id){
+  let f=getFavorites();const on=!f.includes(id);
+  f=on?[...f,id]:f.filter(x=>x!==id);saveFavorites(f);updateFavCount();
+  $$(`[data-fav="${id}"],[data-apfav="${id}"]`).forEach(b=>{b.classList.toggle('active',on);
+    const lab=b.querySelector('span');if(lab)lab.textContent=on?'♥ Saved':'♡ Save';else b.textContent=on?'♥':'♡';
+    if(on)burst(b);});
+  const c=$('#favCount');c.classList.add('bump');setTimeout(()=>c.classList.remove('bump'),450);
+  if(favOverlay.classList.contains('open'))openFavList();
+  if(window.__favOnly)renderGallery();
+  if(on)try{await supabase.rpc('increment_artwork_counter',{p_artwork_id:id,p_counter:'favorites_count'});}catch(e){}
+}
+function favText(items){return items.map(p=>`• ${p.title} (${formatDimension(p.width,p.height,p.unit)}${p.price?', '+p.price:''}) ${ART_URL()}${p.id}`).join('\n');}
+function openFavList(){
+  const ids=getFavorites(),items=artworks.filter(a=>ids.includes(a.id)),body=$('#favListBody');
+  $('#favOverlay .modal-meta').textContent=items.length?`${items.length} saved · kept on this device`:'Kept on this device only';
+  if(!items.length){
+    body.innerHTML=`<div class="fav-empty"><div class="big">♡</div><p>Nothing saved yet. Tap the heart on any painting to keep it here.</p><button class="btn-gold" id="favBrowse">Browse the gallery</button></div>`;
+    $('#favBrowse').onclick=()=>{favOverlay.classList.remove('open');location.hash='#gallery';};
+  }else{
+    const pre=(String(items.find(p=>p.price)?.price||'').match(/^[^\d]*/)||[''])[0].trim();
+    const total=items.filter(p=>p.status!=='sold').reduce((s,p)=>s+money(p.price),0);
+    body.innerHTML=`<div class="fav-total"><span>Combined value, still available</span><b>${total?pre+' '+total.toLocaleString():'On request'}</b></div>
+      <div class="fav-actions"><button class="btn-gold" id="favAsk">Ask Asaj about these</button><button class="btn-outline" id="favCopy">Copy list</button></div>`+
+      items.map((p,i)=>`<div class="fav-list-item" data-open="${p.id}" style="animation-delay:${i*.05}s"><img src="${firstImage(p)}" alt=""><div class="info"><div class="t">${esc(p.title)}</div><div class="m">${esc(p.medium||'')} · ${formatDimension(p.width,p.height,p.unit)}</div><div class="m">${p.status==='sold'?'Sold — ask about similar work':esc(p.price||'Price on request')}</div></div><button data-remove="${p.id}">Remove</button></div>`).join('');
+    $('#favAsk').onclick=()=>window.open(`https://wa.me/${CONTACT.whatsappNumber}?text=`+encodeURIComponent(`Hi Asaj! I've saved these paintings and would love to hear more:\n${favText(items)}`),'_blank');
+    $('#favCopy').onclick=async e=>{try{await navigator.clipboard.writeText(favText(items));e.target.textContent='Copied ✓';setTimeout(()=>e.target.textContent='Copy list',1800);}catch(_){}};
+    body.querySelectorAll('[data-remove]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleFavorite(b.dataset.remove);});
+    body.querySelectorAll('[data-open]').forEach(r=>r.onclick=()=>{favOverlay.classList.remove('open');openPage(r.dataset.open);});
+  }
+  favOverlay.classList.add('open');
+}
+
+/* ---- Artwork pages (shareable links: index.html#/art/ID) ---- */
+const pg=document.createElement('div');pg.id='artPage';
+pg.innerHTML=`<div class="ap-top"><button class="ap-btn" id="apBack">← Back to gallery</button><button class="ap-btn" id="apShare">Copy link</button></div><div class="ap-body" id="apBody"></div>`;
+document.body.append(pg);
+let apId=null,apInternal=false;
+function openPage(id){apInternal=true;location.hash='#/art/'+id;}
+function closePage(){if(apInternal)history.back();else location.hash='#gallery';}
+function goPage(id){history.replaceState(null,'','#/art/'+id);route();pg.scrollTo(0,0);}
+function route(){
+  const m=location.hash.match(/^#\/art\/(.+)$/);
+  if(!m){pg.classList.remove('open');document.body.classList.remove('lock');apId=null;document.title=BASE_TITLE;return;}
+  const p=artworks.find(a=>String(a.id)===decodeURIComponent(m[1]));
+  if(!p){if(artworks.length)location.hash='#gallery';return;}
+  if(apId!==p.id){apId=p.id;renderPage(p);trackView(p.id);pg.scrollTo(0,0);}
+  document.title=`${p.title} — Asaj Perera`;pg.classList.add('open');document.body.classList.add('lock');
+}
+addEventListener('hashchange',route);
+function renderPage(p){
+  const im=imgs(p),size=formatDimension(p.width,p.height,p.unit),sold=p.status==='sold',fav=isFavorited(p.id);
+  const seen=$$('#galleryGrid .card').map(c=>c.dataset.id),order=seen.length?seen:artworks.map(a=>a.id);
+  const i=order.indexOf(p.id),prev=order[(i-1+order.length)%order.length],next=order[(i+1)%order.length];
+  const rel=artworks.filter(a=>a.id!==p.id&&a.category===p.category).slice(0,3);
+  const wa=`https://wa.me/${CONTACT.whatsappNumber}?text=`+encodeURIComponent(`Hi Asaj! I'm interested in "${p.title}" (${size}${p.price?', '+p.price:''}). Is it still available?\n${ART_URL()}${p.id}`);
+  const added=p.createdAt?new Date(p.createdAt).toLocaleDateString(undefined,{month:'long',year:'numeric'}):'';
+  $('#apBody').innerHTML=`
+   <div class="ap-stage"><div class="ap-main" id="apMain"><img src="${im[0]}" alt="${esc(p.title)}"></div>
+     ${im.length>1?`<div class="ap-thumbs">${im.map((u,k)=>`<img src="${u}" class="${k?'':'on'}" data-k="${k}" alt="View ${k+1}">`).join('')}</div>`:''}</div>
+   <div class="ap-info">
+     <span class="eyebrow">${esc(p.category||'Original painting')}</span>
+     <h1>${esc(p.title||'Untitled')}</h1>
+     <div><span class="status-badge ${p.status}" style="position:static;display:inline-block">${statusLabel(p.status)}</span></div>
+     <p class="ap-desc">${esc(p.description)}</p>
+     <div class="about-facts">
+       <div class="row"><span>Medium</span><span>${esc(p.medium||'—')}</span></div>
+       <div class="row"><span>Size</span><span>${size||'—'}</span></div>
+       <div class="row"><span>Price</span><span>${sold?'Sold':esc(p.price||'On request')}</span></div>
+       ${added?`<div class="row"><span>Added</span><span>${added}</span></div>`:''}
+       <div class="row"><span>Includes</span><span>Frame · signed original</span></div></div>
+     <div class="ap-cta">
+       <button class="btn-gold" id="apInq">${sold?'Ask about similar work':'Inquire about this piece'}</button>
+       <a class="btn-outline" id="apWa" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>
+       <button class="btn-outline ap-fav ${fav?'active':''}" data-apfav="${p.id}"><span>${fav?'♥ Saved':'♡ Save'}</span></button></div>
+     <div class="ap-pn"><button data-go="${prev}">← Previous</button><button data-go="${next}">Next →</button></div>
+   </div>
+   ${rel.length?`<div class="ap-rel"><h3>More from ${esc(p.category)}</h3><div class="strip-grid">${rel.map(stripCardHTML).join('')}</div></div>`:''}`;
+  [...$('.ap-info').children].forEach((c,k)=>c.style.setProperty('--i',k));
+  const main=$('#apMain'),mi=main.querySelector('img');
+  main.onclick=()=>main.classList.toggle('zoom');
+  main.onmousemove=e=>{const r=main.getBoundingClientRect();mi.style.transformOrigin=`${(e.clientX-r.left)/r.width*100}% ${(e.clientY-r.top)/r.height*100}%`;};
+  $$('.ap-thumbs img').forEach(t=>t.onclick=()=>{$$('.ap-thumbs img').forEach(x=>x.classList.toggle('on',x===t));mi.style.opacity=0;setTimeout(()=>{mi.src=im[t.dataset.k];mi.style.opacity=1;},180);});
+  $('#apInq').onclick=()=>openInquiryModal(p.id);
+  $('#apWa').onclick=()=>trackWhatsappClick(p.id);
+  $$('[data-apfav]').forEach(b=>b.onclick=()=>toggleFavorite(b.dataset.apfav));
+  $$('.ap-pn [data-go]').forEach(b=>b.onclick=()=>goPage(b.dataset.go));
+  $$('.ap-rel .strip-card').forEach(c=>c.onclick=()=>goPage(c.dataset.id));
+  $('#apShare').onclick=async e=>{const u=ART_URL()+p.id;try{
+    if(navigator.share&&matchMedia('(max-width:860px)').matches)await navigator.share({title:p.title,url:u});
+    else{await navigator.clipboard.writeText(u);e.target.textContent='Link copied ✓';setTimeout(()=>e.target.textContent='Copy link',1800);}}catch(_){}};
+}
+$('#apBack').onclick=closePage;
+addEventListener('keydown',e=>{
+  if(!pg.classList.contains('open')||$('#modalOverlay.open')||$('#favOverlay.open')||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='Escape'){e.stopPropagation();closePage();}
+  if(e.key==='ArrowRight')$('.ap-pn [data-go]:last-child')?.click();
+  if(e.key==='ArrowLeft')$('.ap-pn [data-go]')?.click();
+},true);
+$('#galleryGrid').addEventListener('click',e=>{const c=e.target.closest('.card');
+  if(c&&e.target.closest('.card-frame')&&!e.target.closest('[data-fav]'))openPage(c.dataset.id);});
+
+/* ---- Finding artwork: counts, quick chips, clear all, suggestions, "/" to search ---- */
+window.__favOnly=false;
+const rb=document.createElement('div');rb.className='rbar';
+rb.innerHTML=`<span class="cnt" id="resCount"></span><button class="chip" id="chipAvail">Available only</button><button class="chip" id="chipFav">♥ Saved only</button><button class="chip" id="chipClear" hidden>Clear all</button>`;
+$('.gallery-toolbar').after(rb);
+const dl=document.createElement('datalist');dl.id='titleList';document.body.append(dl);
+$('#gallerySearch').setAttribute('list','titleList');
+function clearAll(){$('#gallerySearch').value='';$('#heroSearchInput').value='';$('#mediumFilter').value='all';$('#availabilityFilter').value='all';
+  window.__favOnly=false;currentCategoryFilter='all';renderCategoryFilters();renderGallery();}
+$('#chipAvail').onclick=()=>{const a=$('#availabilityFilter');a.value=a.value==='available'?'all':'available';renderGallery();};
+$('#chipFav').onclick=()=>{window.__favOnly=!window.__favOnly;renderGallery();};
+$('#chipClear').onclick=clearAll;
+function renderGallery(){
+  _renderGalleryBase();
+  const n=$$('#galleryGrid .card').length,s=getGalleryQueryState();
+  const dirty=s.search||s.medium!=='all'||s.availability!=='all'||currentCategoryFilter!=='all'||window.__favOnly;
+  $('#resCount').textContent=artworks.length?`Showing ${n} of ${artworks.length} paintings`:'';
+  $('#chipAvail').classList.toggle('on',s.availability==='available');
+  $('#chipFav').classList.toggle('on',window.__favOnly);$('#chipClear').hidden=!dirty;
+  dl.innerHTML=artworks.map(a=>`<option value="${esc(a.title)}">`).join('');
+  const em=$('#galleryGrid .gallery-empty');
+  if(em&&artworks.length){em.insertAdjacentHTML('beforeend',`<br><br><button class="btn-outline" id="emptyClear">Clear filters</button>`);$('#emptyClear').onclick=clearAll;}
+  if(!apId&&location.hash.startsWith('#/art/'))route();
+}
+addEventListener('keydown',e=>{if(e.key==='/'&&!pg.classList.contains('open')&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){
+  e.preventDefault();$('#gallery').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#gallerySearch').focus(),450);}});
+
 </script>
 </body>
 </html>
