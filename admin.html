@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard — Asaj Perera Gallery</title>
+<title>Artist Control Centre — Asaj Perera</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,450;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -240,6 +240,58 @@
     main{padding:24px 18px;}
     .drawer{width:100%;}
   }
+/* ===== Artist Control Centre v2 ===== */
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}}
+@keyframes slideIn{from{transform:translateX(100%)}}
+.view.active{animation:viewIn .45s cubic-bezier(.2,.7,.2,1)}
+.modal-overlay.open{animation:viewIn .25s both}.modal-overlay.open .drawer{animation:slideIn .4s cubic-bezier(.2,.7,.2,1)}
+.btn:active,.icon-btn:active{transform:scale(.96)}
+.toast{left:50%;right:auto;transform:translate(-50%,16px) scale(.95);transition:opacity .25s,transform .4s cubic-bezier(.3,1.5,.5,1)}.toast.show{transform:translate(-50%,0) scale(1)}
+nav.sidenav button{position:relative}nav.sidenav button:hover{transform:translateX(3px)}
+.nbadge{margin-left:auto;background:var(--brick);color:#fff;font-family:'Space Mono',monospace;font-size:.62rem;padding:1px 7px;border-radius:20px}.nbadge[hidden]{display:none}
+.cc-hero{background:var(--wall);color:#F4EFE3;padding:34px 36px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.cc-hero::before{content:"";position:absolute;width:440px;height:440px;right:-120px;top:-230px;border-radius:50%;background:radial-gradient(circle,rgba(199,154,61,.38),transparent 65%);animation:drift 9s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(-70px,60px)}}
+.cc-hero>*{position:relative}.cc-sub{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gold-bright);letter-spacing:.06em;margin-bottom:8px}
+.cc-hero h1{font-family:'Fraunces',serif;font-weight:450;font-size:2.4rem;margin:0 0 8px}.cc-hero p{margin:0;color:#CFC6B2;font-size:.95rem}.cc-hero b{color:#fff}
+.cc-acts{display:flex;gap:10px;flex-wrap:wrap}
+.cc-hero .btn:not(.outline){background:var(--gold-bright);border-color:var(--gold-bright);color:var(--wall)}.cc-hero .btn:not(.outline):hover{background:#F4EFE3;border-color:#F4EFE3}
+.btn.lt{color:#F4EFE3;border-color:rgba(244,239,227,.5)}.btn.lt:hover{background:#F4EFE3;color:var(--wall);border-color:#F4EFE3}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--paper);border:1px solid var(--line);padding:18px;transition:transform .25s,border-color .25s}.kpi:hover{transform:translateY(-3px);border-color:var(--gold)}
+.kpi .ic{color:var(--gold-bright)}.kpi .num{font-family:'Fraunces',serif;font-size:2.1rem;margin-top:6px}
+.kpi .lbl{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft)}
+.cc-row{display:grid;gap:22px;margin-bottom:22px}.r3{grid-template-columns:1fr 2fr}.r2{grid-template-columns:1fr 1fr}
+@media(max-width:1000px){.r3,.r2{grid-template-columns:1fr}}
+.donut{display:flex;align-items:center;gap:22px;flex-wrap:wrap}.donut svg{width:140px;height:140px}.donut text{font-family:'Fraunces',serif;font-size:26px;fill:var(--ink)}
+.legend div{display:flex;align-items:center;gap:8px;font-size:.84rem;margin:6px 0}.legend i{width:10px;height:10px;border-radius:50%}
+circle.grow{animation:dash 1.1s cubic-bezier(.2,.7,.2,1) both}@keyframes dash{from{stroke-dasharray:0 400}}
+.bars{display:flex;align-items:stretch;gap:6px;height:180px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--ink-soft)}
+.bw{flex:1;width:100%;display:flex;align-items:flex-end}.bar{width:100%;background:linear-gradient(var(--gold-bright),var(--gold));min-height:3px;transform-origin:bottom}
+.bar.grow{animation:up .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d)}@keyframes up{from{transform:scaleY(0)}}
+.todo{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.86rem}.todo>div{flex:1}
+.todo small{display:block;color:var(--ink-soft);font-family:'Space Mono',monospace;font-size:.64rem;margin-top:2px}
+.todo .dot{width:8px;height:8px;border-radius:50%;background:var(--brick);animation:pulse 1.8s infinite}.todo.soft .dot{background:var(--gold-bright);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(139,58,58,.5)}100%{box-shadow:0 0 0 9px rgba(139,58,58,0)}}
+.tops{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tops .tab-btn{padding:6px 12px;font-size:.64rem}
+.trow{display:flex;align-items:center;gap:12px;padding:7px 0;font-size:.84rem}.trow img{width:38px;height:38px;object-fit:cover}.trow .tb{flex:1}
+.track{height:6px;background:var(--paper-deep);margin-top:5px}.fill{height:100%;background:var(--gold);transform-origin:left}.fill.grow{animation:across .8s cubic-bezier(.2,.7,.2,1) both}@keyframes across{from{transform:scaleX(0)}}
+.dropzone{display:flex;align-items:center;gap:18px;padding:22px 26px;border:1.5px dashed var(--gold);background:rgba(199,154,61,.06);margin-bottom:20px;cursor:pointer;transition:background .25s}.dropzone:hover{background:rgba(199,154,61,.15)}
+.dz-ic{width:46px;height:46px;border-radius:50%;background:var(--gold-bright);color:var(--wall);display:grid;place-items:center;font-size:1.3rem;animation:bob 2.4s ease-in-out infinite;flex-shrink:0}@keyframes bob{50%{transform:translateY(-5px)}}
+.dropzone span{display:block;font-size:.8rem;color:var(--ink-soft);margin-top:3px}
+#dropVeil{position:fixed;inset:14px;z-index:600;border:3px dashed var(--gold-bright);background:rgba(23,19,16,.84);color:#F4EFE3;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:1.8rem;opacity:0;pointer-events:none;transition:opacity .2s}#dropVeil.on{opacity:1}
+.size-chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+#palette{position:fixed;inset:0;z-index:700;background:rgba(23,19,16,.55);display:none;align-items:flex-start;justify-content:center;padding-top:14vh;backdrop-filter:blur(3px)}#palette.on{display:flex}
+.pal-box{width:520px;max-width:92vw;background:var(--paper);animation:viewIn .25s both;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+#palIn{width:100%;border:none;border-bottom:1px solid var(--line);padding:18px 20px;font-size:1rem;background:transparent;outline:none;font-family:'Inter',sans-serif}
+#palList{max-height:340px;overflow:auto;padding:6px}#palList button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:none;background:none;padding:11px 14px;font-size:.9rem;cursor:pointer;font-family:'Inter',sans-serif}
+#palList button.sel,#palList button:hover{background:var(--paper-deep)}#palList img{width:28px;height:28px;object-fit:cover}
+.fab-add{display:none;position:fixed;right:24px;bottom:24px;width:56px;height:56px;border-radius:50%;border:none;background:var(--gold-bright);color:var(--wall);font-size:1.8rem;cursor:pointer;box-shadow:0 12px 28px -8px rgba(0,0,0,.5);z-index:250;transition:transform .3s}
+.app.ready~.fab-add{display:grid;place-items:center}.fab-add:hover{transform:rotate(90deg) scale(1.08)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
 </style>
 </head>
 <body>
@@ -262,20 +314,20 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="logo">Asaj Perera<em>.</em></div>
-      <div class="sub">Admin Dashboard</div>
+      <div class="sub">Artist Control Centre</div>
     </div>
     <nav class="sidenav" id="sidenav">
-      <button data-view="overview" class="active"><span class="ic">◆</span> Dashboard Overview</button>
-      <button data-view="artworks"><span class="ic">▦</span> Artwork Management</button>
-      <button data-view="inquiries"><span class="ic">✉</span> Inquiry Management</button>
-      <button data-view="categories"><span class="ic">▤</span> Category Management</button>
+      <button data-view="overview" class="active"><span class="ic">◆</span> Control Centre</button>
+      <button data-view="artworks"><span class="ic">▦</span> Artworks</button>
+      <button data-view="inquiries"><span class="ic">✉</span> Inbox</button>
+      <button data-view="categories"><span class="ic">▤</span> Categories</button>
       <button data-view="siteimages"><span class="ic">▣</span> Site Images</button>
-      <button data-view="analytics"><span class="ic">▲</span> Artwork Analytics</button>
+      <button data-view="analytics"><span class="ic">▲</span> Insights</button>
     </nav>
     <div class="sidebar-footer">
       <span class="mono" style="font-size:.7rem;color:#C9BFA9;"><span class="conn-dot" id="connDot"></span><span id="connLabel">Connecting…</span></span>
       <p>Changes here sync live to the customer website via Supabase — no code editing needed.</p>
-      <button class="logout-btn" id="logoutBtn">Sign Out</button>
+      <button class="logout-btn" id="palBtn" style="margin-top:10px">Quick find · Ctrl K</button><button class="logout-btn" id="logoutBtn">Sign Out</button>
     </div>
   </aside>
 
@@ -316,6 +368,7 @@
         <div><h1>Artwork Management</h1><p>Add, edit, and publish artworks. Changes appear on the site instantly.</p></div>
         <button class="btn" id="addArtworkBtn">+ Add Artwork</button>
       </div>
+      <div class="dropzone" id="dropZone"><div class="dz-ic">↑</div><div><b>Drop painting photos here to start a new artwork</b><span>You can also drop them anywhere on this page. Title and your usual settings are filled in for you.</span></div><input type="file" id="dzInput" accept="image/*" multiple hidden></div>
       <div class="toolbar">
         <input type="text" id="artworkSearch" placeholder="Search artworks by title...">
         <select id="artworkStatusFilter">
@@ -464,7 +517,7 @@
         <div class="upload-progress" id="af-upload-progress"></div>
       </div>
       <div class="field"><label>Title</label><input type="text" id="af-title" required></div>
-      <div class="field"><label>Description</label><textarea id="af-description" required></textarea></div>
+      <div class="field"><label>Description</label><textarea id="af-description"></textarea></div>
       <div class="field-row-2">
         <div class="field"><label>Category</label><select id="af-category" required></select></div>
         <div class="field"><label>Medium</label>
@@ -491,6 +544,7 @@
           </select>
         </div>
       </div>
+      <div class="size-chips" id="sizeChips"><button type="button" class="icon-btn" data-size="2,3,feet">2×3 fe</button><button type="button" class="icon-btn" data-size="3,4,feet">3×4 fe</button><button type="button" class="icon-btn" data-size="4,5,feet">4×5 fe</button><button type="button" class="icon-btn" data-size="18,24,inches">18×24 in</button><button type="button" class="icon-btn" data-size="24,36,inches">24×36 in</button><button type="button" class="icon-btn" data-size="30,40,inches">30×40 in</button></div>
       <div class="dim-preview" id="af-dim-preview">Preview: —</div>
       <div class="field" style="margin-top:16px;"><label>Price (optional)</label><input type="text" id="af-price" placeholder="e.g. LKR 145,000"></div>
       <div class="field"><label>Availability Status</label>
@@ -503,6 +557,7 @@
       <div class="field checkbox-field"><input type="checkbox" id="af-featured"><label for="af-featured">Feature on homepage</label></div>
       <div class="drawer-actions">
         <button type="submit" class="btn" id="af-submit-btn">Publish Artwork</button>
+        <button type="button" class="btn outline" id="af-again">Publish &amp; add another</button>
         <button type="button" class="btn outline" id="artworkDrawerCancel">Cancel</button>
       </div>
     </form>
@@ -731,7 +786,7 @@ function startAppListeners(){
 /* ============================================================
    OVERVIEW
    ============================================================ */
-function renderOverview(){
+function _ovOld(){
   const total = artworks.length;
   const sold = artworks.filter(a=>a.status==='sold').length;
   const available = artworks.filter(a=>a.status==='available').length;
@@ -781,7 +836,7 @@ function renderCategoryFilterOptions(){
   if([...sel.options].some(o=>o.value===current)) sel.value = current;
 }
 
-function renderArtworkTable(){
+function _tblOld(){
   const tbody = document.getElementById('artworkTableBody');
   const search = (document.getElementById('artworkSearch').value||'').toLowerCase();
   const statusF = document.getElementById('artworkStatusFilter').value;
@@ -876,7 +931,7 @@ document.getElementById('artworkDrawerClose').addEventListener('click', closeArt
 document.getElementById('artworkDrawerCancel').addEventListener('click', closeArtworkDrawer);
 artworkOverlay.addEventListener('click', (e) => { if(e.target===artworkOverlay) closeArtworkDrawer(); });
 
-function openArtworkDrawer(id){
+function _openDrawerOld(id){
   editingArtworkId = id;
   const form = document.getElementById('artworkForm');
   form.reset();
@@ -919,7 +974,7 @@ function openArtworkDrawer(id){
     }catch(err){ /* ignore */ }
   });
 }
-function closeArtworkDrawer(){ artworkOverlay.classList.remove('open'); }
+function _closeOld(){ artworkOverlay.classList.remove('open'); }
 
 document.getElementById('af-images').addEventListener('change', async (e) => {
   const newItems = [...e.target.files].map(file => ({file, url: URL.createObjectURL(file), existing:false}));
@@ -1352,6 +1407,109 @@ function renderAnalytics(){
     </tr>`).join('');
 }
 document.getElementById('analyticsSort').addEventListener('change', renderAnalytics);
+/* ============ Artist Control Centre v2 ============ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const goView=v=>$(`#sidenav [data-view="${v}"]`).click();
+
+/* ---- Visual overview ---- */
+let topMetric='views',ovDone=false;const seen={};
+$('#sidenav').addEventListener('click',e=>{if(e.target.closest('[data-view="overview"]')){ovDone=false;Object.keys(seen).forEach(k=>delete seen[k]);}},true);
+function countUp(el){const to=+el.dataset.to,k=el.dataset.k,from=seen[k]??0;seen[k]=to;
+  if(RM||from===to){el.textContent=to.toLocaleString();return;}
+  const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/800),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e).toLocaleString();if(p<1)requestAnimationFrame(f);})(t0);}
+function renderOverview(){
+  const root=$('#view-overview');if(!root)return;
+  const A=ovDone?'':'grow',sum=k=>artworks.reduce((s,a)=>s+(a[k]||0),0),cnt=s=>artworks.filter(a=>a.status===s).length;
+  const st={available:cnt('available'),reserved:cnt('reserved'),sold:cnt('sold')},newI=inquiries.filter(i=>i.status==='new');
+  const ib=$('#sidenav [data-view="inquiries"]');let nb=ib.querySelector('.nbadge');
+  if(!nb){nb=document.createElement('span');nb.className='nbadge';ib.append(nb);}nb.textContent=newI.length;nb.hidden=!newI.length;
+  const days=[...Array(14)].map((_,k)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-13+k);return{d,c:0};});
+  const inqBy={};inquiries.forEach(i=>{const t=millis(i.createdAt);days.forEach(x=>{if(t>=x.d.getTime()&&t<x.d.getTime()+864e5)x.c++;});if(i.artworkId)inqBy[i.artworkId]=(inqBy[i.artworkId]||0)+1;});
+  const maxD=Math.max(1,...days.map(x=>x.c)),h=new Date().getHours(),g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  const kp=[['Artworks',artworks.length,'▦'],['Inquiries',inquiries.length,'✉'],['Total views',sum('views'),'◉'],['Favourites',sum('favoritesCount'),'♥'],['WhatsApp taps',sum('whatsappClicks'),'✆'],['Sold',st.sold,'✓']];
+  const tot=Math.max(1,artworks.length),R=52,C=2*Math.PI*R;let off=0;
+  const seg=[['available','#3E7A4B'],['reserved','#C79A3D'],['sold','#8B3A3A']].map(([k,c])=>{const len=st[k]/tot*C;
+    const s=`<circle class="${A}" r="${R}" cx="70" cy="70" fill="none" stroke="${c}" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=len;return s;}).join('');
+  const todo=newI.slice(0,4).map(i=>`<div class="todo"><span class="dot"></span><div><b>${esc(i.name||'Someone')}</b> asked about ${esc(i.artworkTitle||'the gallery')}<small>${fmtDate(i.createdAt)}</small></div><button class="icon-btn" data-open-inq="${i.id}">Open</button></div>`);
+  [[artworks.filter(a=>!a.price).length,'without a price'],[artworks.filter(a=>!a.description).length,'without a description'],[artworks.filter(a=>(a.images||[]).length<2).length,'with just one photo']]
+    .forEach(([c,t])=>c&&todo.push(`<div class="todo soft"><span class="dot"></span><div><b>${c}</b> artwork${c>1?'s':''} ${t}</div><button class="icon-btn" data-go="artworks">Review</button></div>`));
+  const key={views:a=>a.views||0,favs:a=>a.favoritesCount||0,inq:a=>inqBy[a.id]||0,wa:a=>a.whatsappClicks||0}[topMetric];
+  const top=[...artworks].sort((a,b)=>key(b)-key(a)).slice(0,6),mx=Math.max(1,...top.map(key));
+  root.innerHTML=`
+  <div class="cc-hero"><div><div class="cc-sub">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})}</div>
+    <h1>${g}, Asaj.</h1><p>${newI.length?`<b>${newI.length} new ${newI.length>1?'inquiries are':'inquiry is'}</b> waiting. `:'Your inbox is clear. '}${st.available} piece${st.available===1?' is':'s are'} on the wall${st.reserved?`, ${st.reserved} reserved`:''}.</p></div>
+    <div class="cc-acts"><button class="btn" data-act="add">+ Add artwork</button><button class="btn outline lt" data-go="inquiries">Open inbox</button><a class="btn outline lt" href="index.html" target="_blank">View site</a></div></div>
+  <div class="kpis">${kp.map(([l,v,i])=>`<div class="kpi"><span class="ic">${i}</span><div class="num" data-to="${v}" data-k="${l}">0</div><div class="lbl">${l}</div></div>`).join('')}</div>
+  <div class="cc-row r3">
+    <div class="panel"><h3>On the wall</h3><div class="donut"><svg viewBox="0 0 140 140"><circle r="52" cx="70" cy="70" fill="none" stroke="#E8DFCB" stroke-width="16"/>${seg}<text x="70" y="78" text-anchor="middle">${artworks.length}</text></svg>
+      <div class="legend"><div><i style="background:#3E7A4B"></i>${st.available} available</div><div><i style="background:#C79A3D"></i>${st.reserved} reserved</div><div><i style="background:#8B3A3A"></i>${st.sold} sold</div></div></div></div>
+    <div class="panel"><h3>Inquiries, last 14 days</h3><div class="bars">${days.map((x,k)=>`<div class="bcol" title="${x.c} on ${x.d.toDateString()}">${x.c||''}<div class="bw"><div class="bar ${A}" style="height:${x.c/maxD*100}%;--d:${k*40}ms"></div></div>${x.d.getDate()}</div>`).join('')}</div></div></div>
+  <div class="cc-row r2">
+    <div class="panel"><h3>Needs your attention</h3>${todo.join('')||'<div class="todo"><div>All caught up. Nice work.</div></div>'}</div>
+    <div class="panel"><h3>Top artworks</h3><div class="tops">${[['views','Views'],['favs','Favourites'],['inq','Inquiries'],['wa','WhatsApp']].map(([k,l])=>`<button class="tab-btn ${k===topMetric?'active':''}" data-top="${k}">${l}</button>`).join('')}</div>
+      ${top.length?top.map((a,k)=>`<div class="trow"><img src="${firstImage(a)}" alt=""><div class="tb">${esc(a.title||'Untitled')}<div class="track"><div class="fill ${A}" style="width:${key(a)/mx*100}%;animation-delay:${k*70}ms"></div></div></div><b class="mono">${key(a)}</b></div>`).join(''):'<div class="empty-state">Add your first artwork to see this fill up.</div>'}</div></div>`;
+  $$('#view-overview [data-to]').forEach(countUp);
+  root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goView(b.dataset.go));
+  root.querySelectorAll('[data-act="add"]').forEach(b=>b.onclick=()=>openArtworkDrawer(null));
+  root.querySelectorAll('[data-open-inq]').forEach(b=>b.onclick=()=>openInquiryDrawer(b.dataset.openInq));
+  root.querySelectorAll('[data-top]').forEach(b=>b.onclick=()=>{topMetric=b.dataset.top;ovDone=false;renderOverview();});
+  if(artworks.length)ovDone=true;
+}
+
+/* ---- Easier adding: drop anywhere, remembered settings, size presets, add another, duplicate ---- */
+const LS='cc_defaults',getDef=()=>{try{return JSON.parse(localStorage.getItem(LS))||{}}catch(e){return{}}};
+let againFlag=false;
+$('#af-description').required=false;
+function applyDefaults(){const d=getDef();[['category','af-category'],['medium','af-medium'],['unit','af-unit'],['status','af-status']].forEach(([k,id])=>{const el=$('#'+id);if(d[k]&&[...el.options].some(o=>o.value===d[k]))el.value=d[k];});}
+function openArtworkDrawer(id){_openDrawerOld(id);againFlag=false;$('#af-again').style.display=id?'none':'';if(!id){applyDefaults();updateDimPreview();}}
+function closeArtworkDrawer(){_closeOld();if(againFlag){againFlag=false;setTimeout(()=>{openArtworkDrawer(null);$('#af-title').focus();},350);}}
+['artworkDrawerClose','artworkDrawerCancel'].forEach(id=>$('#'+id).addEventListener('click',()=>againFlag=false,true));
+artworkOverlay.addEventListener('click',e=>{if(e.target===artworkOverlay)againFlag=false;},true);
+$('#af-again').onclick=()=>{againFlag=true;$('#artworkForm').requestSubmit();};
+$('#artworkForm').addEventListener('submit',()=>{if(!editingArtworkId)localStorage.setItem(LS,JSON.stringify({category:$('#af-category').value,medium:$('#af-medium').value,unit:$('#af-unit').value,status:$('#af-status').value}));});
+$('#sizeChips').addEventListener('click',e=>{const b=e.target.closest('[data-size]');if(!b)return;const[w,h,u]=b.dataset.size.split(',');
+  $('#af-width').value=w;$('#af-height').value=h;$('#af-unit').value=u;updateDimPreview();});
+function quickAdd(files){files=[...files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;
+  const open=artworkOverlay.classList.contains('open');
+  if(!open){openArtworkDrawer(null);$('#af-title').value=files[0].name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
+  const dt=new DataTransfer();files.forEach(f=>dt.items.add(f));const inp=$('#af-images');inp.files=dt.files;inp.dispatchEvent(new Event('change'));}
+$('#dropZone').onclick=e=>{if(e.target.id!=='dzInput')$('#dzInput').click();};
+$('#dzInput').onchange=e=>{quickAdd(e.target.files);e.target.value='';};
+const veil=document.createElement('div');veil.id='dropVeil';veil.textContent='Drop photos to add a new artwork';document.body.append(veil);
+let dc=0;
+addEventListener('dragenter',e=>{if([...(e.dataTransfer?.types||[])].includes('Files')){dc++;veil.classList.add('on');}});
+addEventListener('dragleave',()=>{if(--dc<=0){dc=0;veil.classList.remove('on');}});
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('drop',e=>{e.preventDefault();dc=0;veil.classList.remove('on');if($('#appRoot').classList.contains('ready'))quickAdd(e.dataTransfer.files);});
+function duplicateArtwork(id){openArtworkDrawer(id);editingArtworkId=null;$('#artworkDrawerTitle').textContent='Duplicate artwork';
+  $('#af-submit-btn').textContent='Publish copy';$('#af-title').value+=' (copy)';$('#af-again').style.display='none';}
+function renderArtworkTable(){_tblOld();
+  $$('#artworkTableBody [data-edit]').forEach(b=>{const id=b.dataset.edit;b.insertAdjacentHTML('afterend',`<a class="icon-btn" href="index.html#/art/${id}" target="_blank">View</a><button class="icon-btn" data-dup="${id}">Duplicate</button>`);});
+  $$('#artworkTableBody [data-dup]').forEach(b=>b.onclick=()=>duplicateArtwork(b.dataset.dup));}
+
+/* ---- Quick find (Ctrl/Cmd+K) and floating add button ---- */
+const pal=document.createElement('div');pal.id='palette';
+pal.innerHTML=`<div class="pal-box"><input id="palIn" placeholder="Jump to a page, or search artworks…" autocomplete="off"><div id="palList"></div></div>`;document.body.append(pal);
+const fab=document.createElement('button');fab.className='fab-add';fab.title='Add artwork';fab.textContent='+';fab.onclick=()=>openArtworkDrawer(null);document.body.append(fab);
+let palSel=0,palItems=[];
+function palRender(){const q=$('#palIn').value.toLowerCase().trim();
+  const acts=[['+ Add artwork',()=>openArtworkDrawer(null)],...[['overview','Control Centre'],['artworks','Artworks'],['inquiries','Inbox'],['categories','Categories'],['siteimages','Site images'],['analytics','Insights']].map(([v,l])=>['Go to '+l,()=>goView(v)]),['Open public site',()=>window.open('index.html','_blank')]];
+  const arts=q?artworks.filter(a=>(a.title||'').toLowerCase().includes(q)).slice(0,6).map(a=>['Edit "'+a.title+'"',()=>openArtworkDrawer(a.id),firstImage(a)]):[];
+  palItems=[...acts.filter(a=>!q||a[0].toLowerCase().includes(q)),...arts];palSel=0;
+  $('#palList').innerHTML=palItems.map((x,i)=>`<button class="${i?'':'sel'}" data-i="${i}">${x[2]?`<img src="${x[2]}" alt="">`:''}${esc(x[0])}</button>`).join('')||'<div class="empty-state">No matches</div>';}
+const palOpen=()=>{pal.classList.add('on');$('#palIn').value='';palRender();$('#palIn').focus();},palClose=()=>pal.classList.remove('on');
+function palRun(i){const it=palItems[i];if(it){palClose();it[1]();}}
+$('#palIn').addEventListener('input',palRender);
+$('#palIn').addEventListener('keydown',e=>{const n=palItems.length;
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();palSel=(palSel+(e.key==='ArrowDown'?1:-1)+n)%n;$$('#palList button').forEach((b,i)=>b.classList.toggle('sel',i===palSel));$$('#palList button')[palSel]?.scrollIntoView({block:'nearest'});}
+  if(e.key==='Enter')palRun(palSel);if(e.key==='Escape')palClose();});
+$('#palList').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)palRun(+b.dataset.i);});
+pal.addEventListener('click',e=>{if(e.target===pal)palClose();});
+$('#palBtn').onclick=palOpen;
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'&&$('#appRoot').classList.contains('ready')){e.preventDefault();pal.classList.contains('on')?palClose():palOpen();}});
+
 </script>
 </body>
 </html>
